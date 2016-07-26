@@ -1,0 +1,4 @@
+{
+    "command" : "../../build/src/ParserCommandLine --in test.fab --out actual.txt",
+    "expect_success" : true
+}

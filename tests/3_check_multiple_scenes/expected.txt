@@ -1,0 +1,27 @@
+<scene name="A">
+    <header>
+        <string>title</string>
+        <string>description</string>
+        <choices>
+            <choice>
+                <string>choice 1</string>
+                <string>choice 1 desc</string>
+            </choice>
+        </choices>
+    </header>
+</scene>
+
+<scene name="B">
+    <header>
+        <string>title</string>
+        <string>description</string>
+        <choices>
+            <choice>
+                <header>
+                    <string>choice 1</string>
+                    <string>choice 1 desc</string>
+                </header>
+            </choice>
+        </choices>
+    </header>
+</scene>

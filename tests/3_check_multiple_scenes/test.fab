@@ -1,0 +1,25 @@
+scene A
+{
+    "title"
+    "description"
+
+    choice
+    {
+        "choice 1"
+        "choice 1 desc"
+        goto B
+    }
+}
+
+scene B
+{
+    "title"
+    "description"
+
+    choice
+    {
+        "choice 2"
+        "choice 2 desc"
+        goto A
+    }
+}
