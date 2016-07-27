@@ -1,5 +1,6 @@
 build
 CMakeLists.user.txt
+nohup.out
 
 # Compiled Object files
 *.slo
