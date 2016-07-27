@@ -1,5 +1,5 @@
 build
-CMakeLists.user.txt
+CMakeLists.txt.user
 nohup.out
 
 # Compiled Object files

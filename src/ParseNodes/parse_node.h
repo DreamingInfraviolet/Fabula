@@ -32,6 +32,18 @@ namespace fabula
 				ParseNode* parent() { return mParent; }
 				void parent(ParseNode* parent) { mParent = parent; }
 
+                ParseNode* getRoot()
+                {
+                    auto currentNode = this;
+                    ParseNode* next = currentNode;
+
+                    while (next != nullptr)
+                    {
+                        next = next->parent();
+                    }
+
+                    return currentNode;
+                }
             }; 
         }
     }

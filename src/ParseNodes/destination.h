@@ -28,12 +28,6 @@ namespace fabula
                 std::deque<std::string> mLocationChain;
 			public:
 
-				/** Initialises an empty destination . */
-				Destination();
-
-				/** Constructs a destination with the given location in the chain. */
-				Destination(std::string location);
-
 				/** Appends the inputted location onto the location chain. */
 				void appendLocation(const std::string& location);
 
@@ -46,16 +40,16 @@ namespace fabula
 				/** Returns the pointer to a scene if one exists, inferred from the destination.
 				  * Assumes that parent has been bound.
 				  * Throws a SemanticException if requested ^_^ Otherwise returns null upon failure. */
-				Scene* getScene(bool throwSemanticException = false);
+                Scene* getScene(bool throwSemanticException = false);
 
                 /** Returns the parent scene. */
                 Scene* getParentScene();
 
 				/** Returns an iterator to the start of the destination chain. */
-				std::vector<std::string>::iterator begin();
+                decltype(mLocationChain)::iterator begin();
 
 				/** Returns an iterator to the end of the destination chain. */
-				std::vector<std::string>::iterator end();
+                decltype(mLocationChain)::iterator end();
 
                 decltype(mLocationChain)& _getLocationChain()
                 {
@@ -66,16 +60,16 @@ namespace fabula
             namespace detail
             {
                 //<backsteps, relative, destination>
-                struct DestinationContainer
+                struct ParseStageDestination
                 {
                     int backsteps;
                     bool relative;
                     Destination destination;
-                    DestinationContainer(int backsteps, bool relative, Destination destination)
+                    ParseStageDestination(int backsteps, bool relative, Destination destination)
                         : backsteps(backsteps), relative(relative), destination(destination) {}
                 };
 
-                Destination parseDestinationFromContainer(std::shared_ptr<DestinationContainer> container, Section* section);
+                Destination parseDestinationFromContainer(std::shared_ptr<ParseStageDestination> container, Section* section);
             }
 		}
 	}

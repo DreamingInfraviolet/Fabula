@@ -23,17 +23,14 @@ namespace fabula
             {
         	public:
 
-        		/** Initialises a choice, taking ownership of the arguments. */
-                Choice(const std::shared_ptr<Header>& header, const std::shared_ptr<Destination>& destination);
+                std::shared_ptr<Header>      header;
+                std::shared_ptr<Destination> destination;
 
-                /** Destroys the choice, deleting the children. */
-        		~Choice();
+                /** Initialises a choice. */
+                Choice(const std::shared_ptr<Header>& header, const std::shared_ptr<Destination>& destination = nullptr);
 
 				/** Returns the corresponding node type of the class. */
 				virtual NodeType nodeType();
-
-                std::shared_ptr<Header>      header      = nullptr;
-                std::shared_ptr<Destination> destination = nullptr;
             };
         }
     }

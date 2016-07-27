@@ -19,7 +19,7 @@ namespace fabula
 		{
             namespace detail
             {
-                struct DestinationContainer;
+                struct ParseStageDestination;
             }
 
             class Section;
@@ -35,20 +35,17 @@ namespace fabula
                 std::vector<std::shared_ptr<Choice>> choices;
                 std::shared_ptr<Destination>         destination;
 
-				/** Initialises a fully empty scene. */
-			    Scene();
+                /** Initialises a fully empty scene. */
+                Scene();
 
-			    /** Initialises a scene with the given choices, taking ownership of the arguments. */
+                /** Initialises a scene with the given choices, taking ownership of the arguments. */
                 Scene(std::vector<std::shared_ptr<Choice>> choices);
 
                 /** Initialises a scene from a destination, taking ownership of the argument. */
                 Scene(std::shared_ptr<Destination> destination);
 
                 /** Initialises a scene from a parse destination container. */
-                Scene(std::shared_ptr<detail::DestinationContainer> container);
-
-			    /** Destroys all nested nodes. */
-                ~Scene();
+                Scene(std::shared_ptr<detail::ParseStageDestination> container);
 
 			    /** Returns true if the scene does not have an outgoing path. */
                 bool final() const;

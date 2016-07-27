@@ -22,42 +22,76 @@ namespace fabula
 
 		    class Section : public ParseNode
 		    {
+                template<class T>
+                typename T::mapped_type getRecursiveX(T& member, const std::string& name, bool recursive) const
+                {
+                    auto it = member.find(name);
+                    if(it != member.end())
+                        return it->second;
+
+                    if(!recursive)
+                        return nullptr;
+
+                    for(auto& p : subsections)
+                    {
+                        auto answer = p.second->getRecursiveX(member, name, true);
+                        if(answer)
+                            return answer;
+                    }
+
+                    return nullptr;
+                }
+
+                template<class T>
+                bool hasRecursiveX(T& member, const std::string& name, bool recursive) const
+                {
+                    return (bool)getRecursiveX<T>(member, name, recursive);
+                }
+
             public:
 
                 std::string                                     name;
                 std::map<std::string, std::shared_ptr<Scene>>   scenes;
                 std::map<std::string, std::shared_ptr<Section>> subsections;
 
-				/** Initialises an empty section with no children. */
-				Section();
-
-				/** Destroys all child elements. */
-                ~Section();
-
 				/** Adds a child section, taking ownership of the argument. */
-				void add(Section* s);
+                void add(const std::shared_ptr<Scene>& s);
 
 				/** Adds a child scene, taking ownership of the argument. */
-				void add(Scene* s);
+                void add(const std::shared_ptr<Section>& s);
 
 				/** Returns the corresponding node type of the class. */
-				virtual NodeType nodeType();
+                virtual NodeType nodeType();
 
-				/** returns whether the section has a subsection with a given name. */
-				bool hasSubsection (const std::string& name) const;
+                /** returns whether the section has a subsection with a given name. */
+                bool hasSubsection (const std::string& name, bool recursive = false) const
+                {
+                    return (bool)hasRecursiveX(subsections, name, recursive);
+                }
 
-				/** returns whether the scene has a subsection with a given name. */
-				bool hasScene (const std::string& name) const;
+                /** returns whether the scene has a subsection with a given name. */
+                bool hasScene (const std::string& name, bool recursive = false) const
+                {
+                    return (bool)hasRecursiveX(scenes, name, recursive);
+                }
 
-				/** Returns a subsection given a name, returning null if none exists. */
-                std::shared_ptr<Section> getSubsection(const std::string& name);
+                /** Returns a subsection given a name, returning null if none exists. */
+                Section* getSubsection(const std::string& name, bool recursive = false)
+                {
+                    return getRecursiveX(subsections, name, recursive).get();
+                }
 
-				/** Returns a scene given a name, returning null if none exists. */
-                std::shared_ptr<Scene> getScene(const std::string& name);
+                /** Returns a scene given a name, returning null if none exists. */
+                Scene* getScene(const std::string& name, bool recursive = false)
+                {
+                    return getRecursiveX(scenes, name, recursive).get();
+                }
 
 				/** Scans the section and any subsections for a scene with the name "main",
 				  * and returns the first one found. Should be safe after the semantic checks. */
-                std::shared_ptr<Scene> findStartScene();
+                Scene* findStartScene();
+
+                bool hasChildWithName(const std::string& name, bool recursive = false);
 		    };
 		}
 	}

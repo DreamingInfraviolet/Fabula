@@ -25,10 +25,7 @@ namespace fabula
                 Header();
 
                 /** Initialises a header with s1 as title and s2 as description. */
-                Header(const String& s1, const String& s2);
-
-                /** Initialises a header from the given title. */
-                Header(const String& s1);
+                Header(const String& s1, const String& s2 = String());
 
 				/** Returns the corresponding node type of the class. */
                 virtual NodeType nodeType();

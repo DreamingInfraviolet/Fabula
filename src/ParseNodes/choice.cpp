@@ -10,19 +10,13 @@ namespace fabula
     {
         namespace node
         {
-//            Choice::Choice(Header* header, Destination* destination)
-//                    : mHeader(header), mDestination(destination) {}
+            Choice::Choice(const std::shared_ptr<Header>& header, const std::shared_ptr<Destination>& destination)
+                    : header(header), destination(destination) {}
 
-//            Choice::~Choice()
-//            {
-//                delete mHeader;
-//                delete mDestination;
-//            }
-
-//			ParseNode::NodeType Choice::nodeType()
-//			{
-//				return NodeType::Choice;
-//			}
+            ParseNode::NodeType Choice::nodeType()
+            {
+                return NodeType::Choice;
+            }
         }
     }
 }

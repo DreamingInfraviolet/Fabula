@@ -20,6 +20,7 @@ namespace fabula
 
             if (in.destination)
             {
+                assert(in.destination);
                 visit(*in.destination);
             }
         }
