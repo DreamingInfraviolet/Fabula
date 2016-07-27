@@ -29,12 +29,11 @@ namespace fabula
 
 			class Scene : public ParseNode
 			{
-                std::string                          mName;
-                std::shared_ptr<Header>              mHeader;
-                std::vector<std::shared_ptr<Choice>> mChoices;
-                std::shared_ptr<Destination>         mDestination;
-
-			public:
+            public:
+                std::string                          name;
+                std::shared_ptr<Header>              header;
+                std::vector<std::shared_ptr<Choice>> choices;
+                std::shared_ptr<Destination>         destination;
 
 				/** Initialises a fully empty scene. */
 			    Scene();
@@ -49,31 +48,13 @@ namespace fabula
                 Scene(std::shared_ptr<detail::DestinationContainer> container);
 
 			    /** Destroys all nested nodes. */
-			    ~Scene();
-
-			    /** Sets the header of the scene, taking ownership of the argument. */
-                void header(std::shared_ptr<Header> content);
-
-			    /** Sets the current name of the scene. */
-			    void name(const std::string& str);
+                ~Scene();
 
 			    /** Returns true if the scene does not have an outgoing path. */
-			    bool final() const;
-
-			    /** Returns the current name of the scene. */
-			    std::string name() const;
+                bool final() const;
 
 				/** Returns the corresponding node type of the class. */
-				virtual NodeType nodeType();
-
-				/** Returns the header of the scene. */
-				Header& header();
-
-                /** Returns the choices. */
-                decltype(mChoices)& choices();
-
-				/** Returns the optional destination of the scene. May be null. */
-                decltype(mDestination) destination();
+                virtual NodeType nodeType();
 			};
 		}
 	}

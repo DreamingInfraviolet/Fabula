@@ -22,29 +22,17 @@ namespace fabula
 
 		    class Section : public ParseNode
 		    {
-                std::string                                     mName;
-                std::map<std::string, std::shared_ptr<Scene>>   mScenes;
-                std::map<std::string, std::shared_ptr<Section>> mSubsections;
-			public:
+            public:
 
+                std::string                                     name;
+                std::map<std::string, std::shared_ptr<Scene>>   scenes;
+                std::map<std::string, std::shared_ptr<Section>> subsections;
 
 				/** Initialises an empty section with no children. */
 				Section();
 
 				/** Destroys all child elements. */
-				~Section();
-
-				/** Sets the name of the section. */
-				void name(const std::string& name);
-
-				/** Returns the name of the section. */
-				std::string name() const;
-
-				/** Returns start scenes iterator. */
-                decltype(mScenes)& scenes();
-
-				/** Returns the start subsections iterator. */
-                decltype(mSubsections)& sections();
+                ~Section();
 
 				/** Adds a child section, taking ownership of the argument. */
 				void add(Section* s);

@@ -21,8 +21,6 @@ namespace fabula
 
             class Choice : public ParseNode
             {
-                std::shared_ptr<Header>      mHeader      = nullptr;
-                std::shared_ptr<Destination> mDestination = nullptr;
         	public:
 
         		/** Initialises a choice, taking ownership of the arguments. */
@@ -34,11 +32,8 @@ namespace fabula
 				/** Returns the corresponding node type of the class. */
 				virtual NodeType nodeType();
 
-				/** Returns the internal header. */
-                decltype(mHeader)& header();
-
-				/** Returns the internal destination. */
-                decltype(mDestination)& destination();
+                std::shared_ptr<Header>      header      = nullptr;
+                std::shared_ptr<Destination> destination = nullptr;
             };
         }
     }

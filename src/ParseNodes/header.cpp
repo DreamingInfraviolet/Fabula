@@ -19,17 +19,6 @@ namespace fabula
 //			{
 //				return NodeType::Header;
 //			}
-
-//			String& Header::title()
-//			{
-//				return mTitle;
-//			}
-
-//			String& Header::description()
-//			{
-//				return mDescription;
-//			}
-
         }
     }
 }

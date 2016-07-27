@@ -20,7 +20,6 @@ namespace fabula
         {
             class String : public ParseNode
             {
-                std::string _str;
             public:
 
                 /** Constructs the empty string. */
@@ -39,7 +38,7 @@ namespace fabula
                 void prepareString();
 
 				/** Returns the internal string. */
-				std::string& string();
+                std::string string;
             };
         }
     }

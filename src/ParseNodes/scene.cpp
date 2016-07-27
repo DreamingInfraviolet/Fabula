@@ -38,46 +38,14 @@ namespace fabula
 //                delete mDestination;
 //            }
 
-//            void Scene::header(std::shared_ptr<Header> content)
-//            {
-//                delete mHeader;
-//                mHeader = content;
-//            }
-
-//            void Scene::name(const std::string& str)
-//            {
-//                mName = str;
-//            }
-
 //            bool Scene::final() const
 //            {
 //                return mChoices == nullptr && mDestination == nullptr;
 //            }
 
-//            std::string Scene::name() const
-//            {
-//                return mName;
-//            }
-
 //			ParseNode::NodeType Scene::nodeType()
 //			{
 //				return NodeType::Scene;
-//			}
-
-//			Header& Scene::header()
-//			{
-//				assert(mHeader);
-//				return *mHeader;
-//			}
-
-//            &Scene::choices()
-//			{
-//				return mChoices;
-//			}
-
-//            decltype(mDestination) Scene::destination()
-//			{
-//				return mDestination;
 //			}
         }
     }

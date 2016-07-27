@@ -17,9 +17,10 @@ namespace fabula
         {
             class Header : public ParseNode
             {
-                String mTitle, mDescription;
-
             public:
+
+                String title, description;
+
                 /** Initialises an empty header. */
                 Header();
 
@@ -30,13 +31,7 @@ namespace fabula
                 Header(const String& s1);
 
 				/** Returns the corresponding node type of the class. */
-				virtual NodeType nodeType();
-
-				/** Returns the title. */
-				String& title();
-
-				/** Returns the description. */
-				String& description();
+                virtual NodeType nodeType();
             };
         }
     }

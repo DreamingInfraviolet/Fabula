@@ -21,16 +21,6 @@ namespace fabula
 //					delete it->second;
 //            }
 
-//            void Section::name(const std::string& name)
-//            {
-//                mName = name;
-//            }
-
-//            std::string Section::name() const
-//            {
-//                return mName;
-//            }
-
 //            void Section::add(Section* s)
 //            {
 //				assert(s);
@@ -55,16 +45,6 @@ namespace fabula
 //			{
 //				return NodeType::Section;
 //			}
-
-//            decltype(Section::mScenes)& Section::scenes()
-//			{
-//                return mScenes;
-//            }
-
-//            decltype(Section::mSections)& Section::sections()
-//			{
-//                return mSubsections();
-//            }
 
 //			bool Section::hasSubsection (const std::string& name) const
 //			{

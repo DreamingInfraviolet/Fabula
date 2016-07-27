@@ -38,7 +38,7 @@ namespace fabula
 				void appendLocation(const std::string& location);
 
                 /** Appends a location from the front */
-                void appendLocationFront(const std::string& location);
+                void prependLocation(const std::string& location);
 
 				/** Returns the corresponding node type of the class. */
 				virtual NodeType nodeType();

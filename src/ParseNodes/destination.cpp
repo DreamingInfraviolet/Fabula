@@ -23,7 +23,7 @@ namespace fabula
 //				mLocationChain.push_back(location);
 //			}
 
-//            void Destination::appendLocationFront(const std::string& location)
+//            void Destination::prependLocation(const std::string& location)
 //            {
 //                mLocationChain.push_front(location);
 //            }

@@ -28,11 +28,6 @@ namespace fabula
 //				return NodeType::String;
 //			}
 
-//			std::string& String::string()
-//			{
-//				return _str;
-//			}
-
 //            std::string modifyStr (const boost::smatch& match)
 //            {
 //                std::string str = match.str();

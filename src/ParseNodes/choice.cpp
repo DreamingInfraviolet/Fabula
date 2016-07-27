@@ -23,18 +23,6 @@ namespace fabula
 //			{
 //				return NodeType::Choice;
 //			}
-
-//            decltype(Choice::mHeader)& Choice::header()
-//			{
-//				assert(mHeader);
-//				return *mHeader;
-//			}
-
-//            decltype(Choice::mDestination)& Choice::destination()
-//			{
-//				assert(mDestination);
-//				return *mDestination;
-//			}
         }
     }
 }
