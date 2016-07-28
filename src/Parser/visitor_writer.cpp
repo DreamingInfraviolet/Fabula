@@ -12,14 +12,14 @@ namespace fabula
 
         void VisitorWriter::visit(node::Scene& in)
         {
-            writer.push("scene", { {"name", in.name()} });
+            writer.push("scene", { {"name", in.name} });
 
-            visit(in.header());
+            visit(*in.header);
 
-            if(in.choices().size())
+            if(in.choices.size())
             {
                 writer.push("choices");
-                for (node::Choice& choice : in.choices())
+                for (auto& choice : in.choices)
                 {
                     assert(choice);
                     visit(*choice);
@@ -27,22 +27,22 @@ namespace fabula
                 writer.pop();
             }
 
-            if (in.destination())
-                visit(*in.destination());
+            if (in.destination)
+                visit(*in.destination);
 
             writer.pop();
         }
 
         void VisitorWriter::visit(node::Section& in)
         {
-			writer.push("section", { { "name", in.name() } });
+            writer.push("section", { { "name", in.name } });
 
-			for (auto it = in.scenesBegin(); it != in.scenesEnd(); ++it)
+            for (auto it = in.scenes.begin(); it != in.scenes.end(); ++it)
 			{
 				assert(it->second);
 				visit(*it->second);
 			}
-			for (auto it = in.sectionsBegin(); it != in.sectionsEnd(); ++it)
+            for (auto it = in.subsections.begin(); it != in.subsections.end(); ++it)
 			{
 				assert(it->second);
 				visit(*it->second);
@@ -54,15 +54,15 @@ namespace fabula
         void VisitorWriter::visit(node::String& in)
         {
             writer.push("string");
-            writer.writeBytes(in.string());
+            writer.writeBytes(in.string);
             writer.pop();
         }
 
         void VisitorWriter::visit(node::Header& in)
         {
             writer.push("header");
-            visit(in.title());
-            visit(in.description());
+            visit(in.title);
+            visit(in.description);
             writer.pop();
         }
 
@@ -81,8 +81,8 @@ namespace fabula
         void VisitorWriter::visit(node::Choice& in)
         {
             writer.push("choice");
-            visit(in.header());
-            visit(in.destination());
+            visit(*in.header);
+            visit(*in.destination);
             writer.pop();
         }
     }

@@ -6,7 +6,6 @@
     #include <memory>
     #include "parse_nodes.h"
     #include "fparser.h"
-    #include "parse_helpers.h"
     using namespace fabula::parsing::node;
 
     void fyyerror (char const *s);
@@ -15,116 +14,103 @@
 
     #define YYERROR_VERBOSE
 
-    #ifdef DEBUG_PRINT_GRAMMAR
-    #define DPRINT(str) { fprintf(stdout, "Parsed Rule (%s)\n", str); }
-    #else
-    #define DPRINT(str)
-    #endif
-
     #define YYDEBUG 1
 
     extern int flexLineNo;
+
+    //Bison has a limitation where it does not allow non-pod types to be used,
+    //as it relies on a union and only uses a single return type.
+    //This struct will be used as a return type and contains all possible outputs.
+    struct RET
+    {
+        std::string stdstring;
+        Header header;
+        Destination destination;
+        Choice choice;
+        Scene scene;
+        Section section;
+        String fstring;
+        std::vector<std::shared_ptr<Choice>> choicelist;
+        int integer;
+
+        RET(){}
+        RET(const char* str) : stdstring(str) {}
+    };
+
+#define FYYSTYPE RET
+
 %}
 
-%union
-{
-    std::string*         stringval;
-    char*                charstrval;
-    Section*             sectionval;
-    String*              fstringval;
-    Scene*               sceneval;
-    std::vector<Choice*>* choicevectorval;
-    Choice*              choiceval;
-    int                  intval;
-    Header*              headerval;
-    Destination*         destinationval;
-}
-
 %locations
-%define api.prefix fyy
+%define api.prefix {fyy}
 
 //Terminal symbols
-%token <charstrval> tdiv
-%token <charstrval> tbracket_curly_open
-%token <charstrval> tbracket_curly_close
-%token <charstrval> tbracket_square_open
-%token <charstrval> tbracket_square_close
-%token <charstrval> tscene
-%token <charstrval> tignore
-%token <charstrval> tchoice
-%token <charstrval> tgoto
-%token <charstrval> tfullstop
-%token <stringval > tidentifier
-%token <stringval > tstring
-
-%type <sectionval>      S
-%type <sectionval>      SECTION
-%type <sectionval>      SECTION_DECLARATION
-%type <headerval>       HEADER
-%type <sceneval>        SCENE
-%type <sceneval>        SCENE_DECLARATION
-%type <sceneval>        SCENE_POSTHEADER
-%type <choicevectorval> CHOICE_LIST
-%type <choiceval>       CHOICE
-%type <destinationval>  GOTO
-%type <destinationval>  LOCATION
-%type <intval>          LOCATION_PREFIX
-%type <destinationval>  LOCATION_BODY
+%token tdiv
+%token tbracket_curly_open
+%token tbracket_curly_close
+%token tbracket_square_open
+%token tbracket_square_close
+%token tscene
+%token tignore
+%token tchoice
+%token tgoto
+%token tfullstop
+%token tidentifier
+%token tstring
 
 %%
 
-//Note that all identifiers and strings must be deleted, along with other dynamically allocated resources.
+///@return Section A fully populated section object. This is the result!
+S                   : SECTION                            { $$ = $1;
+                                                           fabula::parsing::Parser::instance()->setParseResult(std::make_shared<Section>($$.section)); }
 
-S                   : SECTION                            { $$ = $1; fabula::parsing::Parser::instance()->setParseResult($$); DPRINT("S"); };
+///@return Section A fully populated section object.
+SECTION             :                                    { }
+                     | SECTION_DECLARATION SECTION       { $$ = $2;
+                                                           $$.section.add(std::make_shared<Section>($1.section)); }
+                     | SCENE_DECLARATION SECTION         { $$ = $2;
+                                                           $$.section.add(std::make_shared<Scene>($1.scene)); }
 
-
-SECTION             :                                    { $$ = new Section(); DPRINT("SECTION"); }
-                     | SECTION_DECLARATION SECTION       { $$ = $2; if($$) $$->add($1); DPRINT("SECTION"); }
-                     | SCENE_DECLARATION SECTION         { $$ = $2; if($$) $$->add($1); DPRINT("SCENE"); }
-
+///@return Section A fully populated scene object.
 SECTION_DECLARATION : tidentifier tbracket_square_open
-                        SECTION tbracket_square_close    { $$ = $3; if($$) $$->name(*$1); delete $1; DPRINT("SECTION_DECLARATION"); };
+                        SECTION tbracket_square_close    { $$ = $3;
+                                                           $$.section.name = $1.stdstring; }
 
-SCENE_DECLARATION   :tscene tidentifier tbracket_curly_open SCENE tbracket_curly_close { $$ = $4; if($$) $$->name(*$2); delete $2; DPRINT("SCENE_DECLARATION"); };
+///@return Scene A fully populated scene object.
+SCENE_DECLARATION   :tscene tidentifier tbracket_curly_open SCENE tbracket_curly_close {
+                                                           $$ = $4;
+                                                           $$.scene.name = $2.stdstring; }
 
-SCENE               : HEADER SCENE_POSTHEADER            { $$ = $2; if($$) $$->header($1); DPRINT("SCENE"); };
+///@return Scene A partially populated scene object (only header and content).
+SCENE               : HEADER SCENE_POSTHEADER            { $$ = $2;
+                                                           $$.header = $1.header; }
 
-SCENE_POSTHEADER    : CHOICE_LIST                        { $$ = new Scene($1); DPRINT("SCENE_POSTHEADER"); }
-                    | GOTO                               { $$ = new Scene($1); DPRINT("SCENE_POSTHEADER"); };
+///@return Scene A partially populated scene object (only content).
+SCENE_POSTHEADER    : CHOICE_LIST                        { $$.scene = Scene($1.choicelist); }
 
-HEADER              : tstring                            { $$ = new Header(std::string(*$1)); delete $1; DPRINT("HEADER"); }
-                    | tstring tstring                    { $$ = new Header(std::string(*$1), std::string(*$2));
-                                                           delete $1; delete $2; DPRINT("HEADER"); };
+///@return Header A populated header.
+HEADER              : tstring                            { $$.header = Header($1.stdstring); }
+                    | tstring tstring                    { $$.header = Header($1.stdstring, $2.stdstring); }
 
-CHOICE_LIST         :                                    { $$ = new std::vector<Choice*>(); DPRINT("CHOICE_LIST"); }
+///@return std::vector<Choice> A vector of choices.
+CHOICE_LIST         :                                    { }
                     | CHOICE_LIST CHOICE                 { $$ = $1;
-                                                           if($$) $$->push_back($2);DPRINT("CHOICE_LIST"); };
+                                                           $$.choicelist.push_back(std::make_shared<Choice>($2.choice)); };
 
-CHOICE              : tchoice tbracket_curly_open HEADER GOTO tbracket_curly_close { $$ = new Choice($3, $4); DPRINT("CHOICE"); };
+///@return Choice The populated choice.
+CHOICE              : tchoice tbracket_curly_open HEADER GOTO tbracket_curly_close { $$.choice.header = std::make_shared<Header>($3.header);
+                                                                                     $$.choice.destination = std::make_shared<Destination>($4.destination); }
 
-GOTO                : tgoto LOCATION                     { $$ = $2; DPRINT("GOTO"); };
+    ///@return Destination The location object.
+    GOTO                : tgoto LOCATION                     { $$.destination = $2.destination; };
 
-LOCATION            : tdiv LOCATION_BODY                 { $$ = $2;
-                                                           if($$) std::get<1>(*$$) = false;
-                                                           DPRINT("LOCATION"); };
+    ///@return Destination The location object.
+    LOCATION            : tdiv LOCATION_BODY                 { $$.destination = $2.destination; }
+                        | LOCATION_BODY                      { $$.destination = $1.destination; }
 
-                    | LOCATION_PREFIX LOCATION_BODY      { $$ = $2;
-                                                           if($$) std::get<0>(*$$) = $1;
-                                                           if($$) std::get<1>(*$$) = true;
-                                                           DPRINT("LOCATION"); }
-
-LOCATION_PREFIX      : { $$=0; }
-                     | LOCATION_PREFIX tfullstop         { $$ = $1+1; DPRINT("LOCATION_PREFIX"); };
-
-
-LOCATION_BODY        : LOCATION_BODY tdiv tidentifier    { $$ = $1;
-                                                           if($$) std::get<2>(*$$).appendLocation(*$3);
-                                                           delete $3;
-                                                           DPRINT("LOCATION_BODY"); }
-
-                     | tidentifier                       { $$ = std::make_shared<DestinationContainer>(0, true, Destination(*$1));
-                                                           delete $1;
-                                                           DPRINT("LOCATION_BODY"); };
+///@return Destination, to be turned into a Destination object.
+LOCATION_BODY        : LOCATION_BODY tdiv tidentifier    { $$.destination.appendLocation($3.stdstring); }
+                     | tidentifier                       { $$.destination = Destination($1.stdstring); }
 
 %%
 void fyyerror (char const *s)

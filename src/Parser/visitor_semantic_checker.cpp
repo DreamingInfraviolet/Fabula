@@ -9,7 +9,7 @@ namespace fabula
     {
         void VisitorSemanticChecker::visit(node::Scene& in)
         {
-			if (in.name() == "main")
+            if (in.name == "main")
 			{
 				++mNumberOfStartPointsFound;
 				if (mNumberOfStartPointsFound > 1)

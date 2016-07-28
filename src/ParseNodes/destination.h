@@ -28,6 +28,13 @@ namespace fabula
                 std::deque<std::string> mLocationChain;
 			public:
 
+                Destination(){}
+
+                Destination(const std::string& str)
+                {
+                    mLocationChain.push_back(str);
+                }
+
 				/** Appends the inputted location onto the location chain. */
 				void appendLocation(const std::string& location);
 
@@ -55,22 +62,7 @@ namespace fabula
                 {
                     return mLocationChain;
                 }
-			};
-
-            namespace detail
-            {
-                //<backsteps, relative, destination>
-                struct ParseStageDestination
-                {
-                    int backsteps;
-                    bool relative;
-                    Destination destination;
-                    ParseStageDestination(int backsteps, bool relative, Destination destination)
-                        : backsteps(backsteps), relative(relative), destination(destination) {}
-                };
-
-                Destination parseDestinationFromContainer(std::shared_ptr<ParseStageDestination> container, Section* section);
-            }
+            };
 		}
 	}
 }

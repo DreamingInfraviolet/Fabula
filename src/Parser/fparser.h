@@ -7,9 +7,9 @@
 */
 
 #include <string>
-#include <string>
 #include <istream>
 #include <ostream>
+#include <memory>
 
 namespace fabula
 {
@@ -24,7 +24,7 @@ namespace fabula
 
             static Parser* mInstance;
 
-            fabula::parsing::node::Section* mParseTree; //Represents the current internal tree
+            std::shared_ptr<fabula::parsing::node::Section> mParseTree; //Represents the current internal tree
             std::string mRootPath;
 
             Parser(std::istream& inputStream, const std::string& rootPath);
@@ -53,7 +53,7 @@ namespace fabula
             void parse();
 
 			/** Sets the parse result. Should only be used by the generated parser. */
-			void setParseResult(fabula::parsing::node::Section* result);
+            void setParseResult(std::shared_ptr<node::Section> result);
 
 			/** Returns the parse result. */
 			node::Section* getParseResult();

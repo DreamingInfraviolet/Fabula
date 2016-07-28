@@ -102,43 +102,6 @@ namespace fabula
             {
                 return mLocationChain.end();
             }
-
-
-            namespace detail
-            {
-                Destination parseDestinationFromContainer(std::shared_ptr<ParseStageDestination> container, Section* section)
-                {
-                    assert(container);
-
-                    ParseNode* prev = section;
-                    assert(prev);
-
-                    {
-                        ParseNode* current = prev;
-
-                        while(container->backsteps > 0 && current != nullptr)
-                        {
-                            prev = current;
-                            current = current->parent();
-                        }
-                    }
-
-                    assert(prev);
-
-                    if(container->relative)
-                    {
-                        //If this is a relative path, we must append all the nodes from the root
-                        //onwards.
-
-                        while(prev != nullptr)
-                        {
-                            Section* sec = dynamic_cast<Section*>(prev);
-                            assert(sec);
-                            container->destination.prependLocation(sec->name);
-                        }
-                    }
-                }
-            }
 		}
 	}
 }

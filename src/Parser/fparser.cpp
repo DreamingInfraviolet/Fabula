@@ -26,7 +26,6 @@ namespace fabula
         Parser* Parser::mInstance = nullptr;
 
         Parser::Parser(std::istream& inputStream, const std::string& rootPath)
-            :  mParseTree(nullptr)
         {
             setInputStream(inputStream, rootPath);
         }
@@ -37,8 +36,6 @@ namespace fabula
             if (mInstance)
                 Log::w("Destroying parser without using the destroy() method is dangerous.",
                     Log::Severity::Medium, Log::Type::Internal);
-            if (mParseTree)
-                delete mParseTree;
         }
 
         Parser* Parser::create(std::istream& inputStream, const std::string& rootPath)
@@ -97,16 +94,14 @@ namespace fabula
             wasAlreadyParsing = false;
         }
 
-        void Parser::setParseResult(fabula::parsing::node::Section* result)
+        void Parser::setParseResult(std::shared_ptr<fabula::parsing::node::Section> result)
         {
-            if (mParseTree)
-                delete mParseTree;
-            mParseTree = result;
+            mParseTree = std::move(result);
         }
 
         node::Section* Parser::getParseResult()
         {
-            return mParseTree;
+            return mParseTree.get();
         }
 
         void Parser::write(Writer& writer)

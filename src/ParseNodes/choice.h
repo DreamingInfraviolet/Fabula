@@ -26,6 +26,8 @@ namespace fabula
                 std::shared_ptr<Header>      header;
                 std::shared_ptr<Destination> destination;
 
+                Choice() {}
+
                 /** Initialises a choice. */
                 Choice(const std::shared_ptr<Header>& header, const std::shared_ptr<Destination>& destination = nullptr);
 

@@ -6,7 +6,7 @@ set(PARSER_CMD_DIR                                 ${CMAKE_CURRENT_SOURCE_DIR}/P
 set(INTERFACE_HTML_DIR                             ${CMAKE_CURRENT_SOURCE_DIR}/HTMLGeneratorInterface/)
                    
 macro(populate_sources name dir)
-    file(GLOB ${name} ${dir}/*.lzz ${dir}/*.cpp ${dir}/*.cc ${dir}/*.c)
+    file(GLOB ${name} ${dir}/*.cpp ${dir}/*.cc ${dir}/*.c)
 endmacro()
 
 macro(populate_headers name dir)
