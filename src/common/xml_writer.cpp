@@ -17,8 +17,8 @@ namespace fabula
 			const std::initializer_list<const std::pair<const std::string, const std::string>>& attributes)
 		{
 			stack.push_back(name);
-			++indentationLevel;
 			writeOpenTagText(name, attributes, false);
+            ++indentationLevel;
 		}
 
 		void XmlWriter::singleTag(const std::string& name,
@@ -42,7 +42,7 @@ namespace fabula
 		{
 			std::string name = stack.back();
 			stack.pop_back();
-			indent(--indentationLevel);
+            indent(--indentationLevel);
 			stream << "</" << name << ">\n";
 		}
 

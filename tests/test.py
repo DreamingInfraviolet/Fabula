@@ -29,6 +29,8 @@ if __name__=="__main__":
 
         #Prepare
         print("\033[95mRunning test " + folder)
+        if verbose:
+        	print(os.getcwd())
         os.chdir(folder)
 
         #Read control json

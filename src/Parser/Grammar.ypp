@@ -97,8 +97,8 @@ CHOICE_LIST         :                                    { }
                                                            $$.push_back(std::make_shared<Choice>($2)); };
 
 ///@return Choice The populated choice.
-CHOICE              : tchoice tbracket_curly_open HEADER GOTO tbracket_curly_close { $$.header = std::make_shared<Header>($3);
-                                                                                     $$.destination = std::make_shared<Destination>($4); }
+CHOICE              : tchoice tstring tbracket_curly_open tstring GOTO tbracket_curly_close { $$.header = std::make_shared<Header>($2, $4);
+                                                                                     $$.destination = std::make_shared<Destination>($5); }
 
 ///@return Destination The location object.
 GOTO                : tgoto LOCATION                     { $$ = $2; };

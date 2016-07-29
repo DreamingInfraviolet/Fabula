@@ -1,11 +1,10 @@
-scene A
+scene main
 {
     "title"
     "description"
 
-    choice
+    choice "choice 1"
     {
-        "choice 1"
         "choice 1 desc"
         goto B
     }
@@ -16,10 +15,9 @@ scene B
     "title"
     "description"
 
-    choice
+    choice "choice 2"
     {
-        "choice 2"
         "choice 2 desc"
-        goto A
+        goto main
     }
 }
