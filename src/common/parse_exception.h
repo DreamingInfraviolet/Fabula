@@ -4,9 +4,9 @@
 
 namespace fabula
 {
-	namespace parsing
-	{
-#define BASIC_EXCEPTION(NAME)\
+    namespace parsing
+    {
+        #define BASIC_EXCEPTION(NAME)\
         class NAME : public std::runtime_error\
         {\
         public:\
@@ -18,6 +18,6 @@ namespace fabula
         BASIC_EXCEPTION(ParseException)
         BASIC_EXCEPTION(SynstacticException)
         BASIC_EXCEPTION(SemanticException)
-#undef BASIC_EXCEPTION
-	}
+        #undef BASIC_EXCEPTION
+    }
 }

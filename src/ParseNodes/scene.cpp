@@ -19,15 +19,6 @@ namespace fabula
             Scene::Scene(std::shared_ptr<Destination> destination)
                 : destination(destination) {}
 
-            Scene::Scene(std::shared_ptr<detail::ParseStageDestination> container)
-            {
-                assert(container);
-                if(container->relative)
-                {
-                    container->destination.parent(this);
-                }
-            }
-
             bool Scene::final() const
             {
                 return choices.size() == 0 && !destination;

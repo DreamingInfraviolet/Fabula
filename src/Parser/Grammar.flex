@@ -9,7 +9,8 @@
  #include "header.h"
  #include "destination.h"
  using namespace fabula::parsing::node;
- #include "Grammar.tab.hpp"
+ #include "generated_parser.hpp"
+ #include "fyystype.h"
 
  int flexLineNo=1;
 %}
@@ -27,21 +28,21 @@ WHITESPACE [ \t\n\r]
  
         // Warning: Use double quotes for literals!
 
-"/"       { fyylval.charstrval = "/"; return tdiv; }
-"{"       { fyylval.charstrval = "{";  return tbracket_curly_open;  }
-"}"       { fyylval.charstrval = "}";  return tbracket_curly_close; }
-"["       { fyylval.charstrval = "[";  return tbracket_square_open; }
-"]"       { fyylval.charstrval = "]";  return tbracket_square_close; }
-"scene"       { fyylval.charstrval = "scene";  return tscene; }
-"choice"        { fyylval.charstrval = "choice";  return tchoice; }
-"goto"        { fyylval.charstrval = "goto";  return tgoto; }
-[A-Za-z_]+([a-za-z0-9_])*       { fyylval.stringval = new std::string(yytext);  return tidentifier; }
-(\"([^\"\\]|(\\[a-za-z\"]))*\")|(\'([^\'\\]|(\\[a-za-z\']))*\')  { fyylval.stringval = new std::string(yytext);  return tstring; }
+"/"       { fyylval.stdstring = "/"; return tdiv; }
+"{"       { fyylval.stdstring = "{";  return tbracket_curly_open;  }
+"}"       { fyylval.stdstring = "}";  return tbracket_curly_close; }
+"["       { fyylval.stdstring = "[";  return tbracket_square_open; }
+"]"       { fyylval.stdstring = "]";  return tbracket_square_close; }
+"scene"       { fyylval.stdstring = "scene";  return tscene; }
+"choice"        { fyylval.stdstring = "choice";  return tchoice; }
+"goto"        { fyylval.stdstring = "goto";  return tgoto; }
+[A-Za-z_]+([a-za-z0-9_])*       { fyylval.stdstring = yytext;  return tidentifier; }
+(\"([^\"\\]|(\\[a-za-z\"]))*\")|(\'([^\'\\]|(\\[a-za-z\']))*\')  { fyylval.stdstring = yytext;  return tstring; }
 <<EOF>>       {  return 0; }
 "\r\n"      { ++flexLineNo; }
 "\r"      { ++flexLineNo; }
 "\n"      { ++flexLineNo; }
 [ \t]          /* Ignore */
-"."     { fyylval.charstrval = ".";  return tfullstop; }
+"."     { fyylval.stdstring = ".";  return tfullstop; }
 .       { printf("Lexing error on line %d: \"%s\"\n", yylineno, yytext); }
 %%

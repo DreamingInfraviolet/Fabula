@@ -6,6 +6,8 @@
     #include <memory>
     #include "parse_nodes.h"
     #include "fparser.h"
+    #include "fyystype.h"
+
     using namespace fabula::parsing::node;
 
     void fyyerror (char const *s);
@@ -21,96 +23,93 @@
     //Bison has a limitation where it does not allow non-pod types to be used,
     //as it relies on a union and only uses a single return type.
     //This struct will be used as a return type and contains all possible outputs.
-    struct RET
-    {
-        std::string stdstring;
-        Header header;
-        Destination destination;
-        Choice choice;
-        Scene scene;
-        Section section;
-        String fstring;
-        std::vector<std::shared_ptr<Choice>> choicelist;
-        int integer;
-
-        RET(){}
-        RET(const char* str) : stdstring(str) {}
-    };
-
-#define FYYSTYPE RET
 
 %}
 
 %locations
 %define api.prefix {fyy}
+%define api.value.type {class FYYSType}
 
 //Terminal symbols
-%token tdiv
-%token tbracket_curly_open
-%token tbracket_curly_close
-%token tbracket_square_open
-%token tbracket_square_close
-%token tscene
-%token tignore
-%token tchoice
-%token tgoto
-%token tfullstop
-%token tidentifier
-%token tstring
+%token <stdstring> tdiv
+%token <stdstring> tbracket_curly_open
+%token <stdstring> tbracket_curly_close
+%token <stdstring> tbracket_square_open
+%token <stdstring> tbracket_square_close
+%token <stdstring> tscene
+%token <stdstring> tignore
+%token <stdstring> tchoice
+%token <stdstring> tgoto
+%token <stdstring> tfullstop
+%token <stdstring> tidentifier
+%token <stdstring> tstring
 
+%type <section> S
+%type <section> SECTION
+%type <section> SECTION_DECLARATION
+%type <scene> SCENE_DECLARATION
+%type <scene> SCENE
+%type <scene> SCENE_POSTHEADER
+%type <header> HEADER
+%type <choicelist> CHOICE_LIST
+%type <choice> CHOICE
+%type <destination> GOTO
+%type <destination> LOCATION_BODY
+%type <destination> LOCATION
 %%
+
 
 ///@return Section A fully populated section object. This is the result!
 S                   : SECTION                            { $$ = $1;
-                                                           fabula::parsing::Parser::instance()->setParseResult(std::make_shared<Section>($$.section)); }
+                                                           fabula::parsing::Parser::instance()->setParseResult(std::make_shared<Section>($$)); }
 
 ///@return Section A fully populated section object.
 SECTION             :                                    { }
                      | SECTION_DECLARATION SECTION       { $$ = $2;
-                                                           $$.section.add(std::make_shared<Section>($1.section)); }
+                                                           $$.add(std::make_shared<Section>($1)); }
                      | SCENE_DECLARATION SECTION         { $$ = $2;
-                                                           $$.section.add(std::make_shared<Scene>($1.scene)); }
+                                                           $$.add(std::make_shared<Scene>($1)); }
 
 ///@return Section A fully populated scene object.
 SECTION_DECLARATION : tidentifier tbracket_square_open
                         SECTION tbracket_square_close    { $$ = $3;
-                                                           $$.section.name = $1.stdstring; }
+                                                           $$.name = $1; }
 
 ///@return Scene A fully populated scene object.
 SCENE_DECLARATION   :tscene tidentifier tbracket_curly_open SCENE tbracket_curly_close {
                                                            $$ = $4;
-                                                           $$.scene.name = $2.stdstring; }
+                                                           $$.name = $2; }
 
 ///@return Scene A partially populated scene object (only header and content).
 SCENE               : HEADER SCENE_POSTHEADER            { $$ = $2;
-                                                           $$.header = $1.header; }
+                                                           $$.header = std::make_shared<Header>($1); }
 
 ///@return Scene A partially populated scene object (only content).
-SCENE_POSTHEADER    : CHOICE_LIST                        { $$.scene = Scene($1.choicelist); }
+SCENE_POSTHEADER    : CHOICE_LIST                        { $$ = Scene($1); }
 
 ///@return Header A populated header.
-HEADER              : tstring                            { $$.header = Header($1.stdstring); }
-                    | tstring tstring                    { $$.header = Header($1.stdstring, $2.stdstring); }
+HEADER              : tstring                            { $$ = Header($1); }
+                    | tstring tstring                    { $$ = Header($1, $2); }
 
 ///@return std::vector<Choice> A vector of choices.
 CHOICE_LIST         :                                    { }
                     | CHOICE_LIST CHOICE                 { $$ = $1;
-                                                           $$.choicelist.push_back(std::make_shared<Choice>($2.choice)); };
+                                                           $$.push_back(std::make_shared<Choice>($2)); };
 
 ///@return Choice The populated choice.
-CHOICE              : tchoice tbracket_curly_open HEADER GOTO tbracket_curly_close { $$.choice.header = std::make_shared<Header>($3.header);
-                                                                                     $$.choice.destination = std::make_shared<Destination>($4.destination); }
+CHOICE              : tchoice tbracket_curly_open HEADER GOTO tbracket_curly_close { $$.header = std::make_shared<Header>($3);
+                                                                                     $$.destination = std::make_shared<Destination>($4); }
 
-    ///@return Destination The location object.
-    GOTO                : tgoto LOCATION                     { $$.destination = $2.destination; };
+///@return Destination The location object.
+GOTO                : tgoto LOCATION                     { $$ = $2; };
 
-    ///@return Destination The location object.
-    LOCATION            : tdiv LOCATION_BODY                 { $$.destination = $2.destination; }
-                        | LOCATION_BODY                      { $$.destination = $1.destination; }
+///@return Destination The location object.
+LOCATION            : tdiv LOCATION_BODY                 { $$ = $2; }
+                    | LOCATION_BODY                      { $$ = $1; }
 
 ///@return Destination, to be turned into a Destination object.
-LOCATION_BODY        : LOCATION_BODY tdiv tidentifier    { $$.destination.appendLocation($3.stdstring); }
-                     | tidentifier                       { $$.destination = Destination($1.stdstring); }
+LOCATION_BODY        : LOCATION_BODY tdiv tidentifier    { $$.appendLocation($3); }
+                     | tidentifier                       { $$ = Destination($1); }
 
 %%
 void fyyerror (char const *s)
