@@ -13,7 +13,6 @@ add_library(FabulaParser
                 ${PARSER_SOURCES}
                 ${PARSER_HEADERS}
                 ${COMMON_SOURCES}
-                ${COMMON_HEADERS}
                 ${BISON_Parser_OUTPUTS}
                 ${FLEX_Lexer_OUTPUTS}
                 )

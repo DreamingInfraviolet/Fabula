@@ -8,8 +8,7 @@ source_group(generated FILES)
 add_library(${TARGET_NAME}
             ${COMMON_SOURCES}
             ${COMMON_HEADERS}
-            ${PARSE_NODE_SOURCES}
-            ${PARSE_NODE_HEADERS})
+            ${PARSE_NODE_SOURCES})
 
 target_link_libraries(${TARGET_NAME} ${Boost_LIBRARIES})
 include_directories(. ${PARSE_NODE_DIR})
