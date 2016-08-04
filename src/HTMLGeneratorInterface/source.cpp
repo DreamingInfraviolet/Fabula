@@ -147,7 +147,7 @@ namespace fabula
             std::string str(templateStr);
 
             std::ostringstream choicesStr;
-            HtmlWriter writer(choicesStr);
+            XmlWriter writer(choicesStr);
 
             //Write choices
             writer.push("ul");
