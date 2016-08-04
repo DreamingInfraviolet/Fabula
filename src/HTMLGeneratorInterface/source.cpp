@@ -195,10 +195,10 @@ namespace fabula
     public:
 
         HtmlInterface()
-            : nameRegex("\\[\\$\\s*scene_name\\s*\\$\\]"),
-              headRegex("\\[\\$\\s*head\\s*\\$\\]"),
-              descRegex("\\[\\$\\s*desc\\s*\\$\\]"),
-              choicesRegex("\\[\\$\\s*choices\\s*\\$\\]") { }
+            : nameRegex(R"(\[\$\s*scene_name\s*\$\])"),
+              headRegex(R"(\[\$\s*head\s*\$\])"),
+              descRegex(R"(\[\$\s*desc\s*\$\])"),
+              choicesRegex(R"(\[\$\s*choices\s*\$\])") { }
 
         void process(Section* root, const Configuration& config)
         {
