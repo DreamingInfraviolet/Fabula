@@ -88,7 +88,8 @@ SCENE               : HEADER SCENE_POSTHEADER            { $$ = $2;
 SCENE_POSTHEADER    : CHOICE_LIST                        { $$ = Scene($1); }
 
 ///@return Header A populated header.
-HEADER              : tstring                            { $$ = Header($1); }
+HEADER              :                                    { fyyerror("Missing title."); }
+                    | tstring                            { $$ = Header($1); }
                     | tstring tstring                    { $$ = Header($1, $2); }
 
 ///@return std::vector<Choice> A vector of choices.
@@ -115,4 +116,5 @@ LOCATION_BODY        : LOCATION_BODY tdiv tidentifier    { $$.appendLocation($3)
 void fyyerror (char const *s)
 {
   fprintf (stderr, "Parsing error at %d: %s\n", flexLineNo, s);
+  abort();
 }
