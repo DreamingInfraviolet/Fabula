@@ -1,27 +1,56 @@
-<scene name="A">
-    <header>
-        <string>title</string>
-        <string>description</string>
-        <choices>
-            <choice>
-                <string>choice 1</string>
-                <string>choice 1 desc</string>
-            </choice>
-        </choices>
-    </header>
-</scene>
-
-<scene name="B">
-    <header>
-        <string>title</string>
-        <string>description</string>
+<section name="">
+    <scene name="B">
+        <header>
+            <string>
+                "title"
+            </string>
+            <string>
+                "description"
+            </string>
+        </header>
         <choices>
             <choice>
                 <header>
-                    <string>choice 1</string>
-                    <string>choice 1 desc</string>
+                    <string>
+                        "choice 2"
+                    </string>
+                    <string>
+                        "choice 2 desc"
+                    </string>
                 </header>
+                <destination>
+                    <link>
+                        "main"
+                    </link>
+                </destination>
             </choice>
         </choices>
-    </header>
-</scene>
+    </scene>
+    <scene name="main">
+        <header>
+            <string>
+                "title"
+            </string>
+            <string>
+                "description"
+            </string>
+        </header>
+        <choices>
+            <choice>
+                <header>
+                    <string>
+                        "choice 1"
+                    </string>
+                    <string>
+                        "choice 1 desc"
+                    </string>
+                </header>
+                <destination>
+                    <link>
+                        "B"
+                    </link>
+                </destination>
+            </choice>
+        </choices>
+    </scene>
+</section>

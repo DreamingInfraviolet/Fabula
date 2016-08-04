@@ -39,7 +39,7 @@ if __name__=="__main__":
         #Prepare
         print("Running test " + folder)
         if verbose:
-        	print(os.getcwd())
+            print(os.getcwd())
         os.chdir(folder)
 
         #Read control json
@@ -63,20 +63,15 @@ if __name__=="__main__":
 
         os.chdir("..")
 
-        #Print result
-        if verbose:
-            print("Expected: " + expectedOutput)
-            print("Actual:   " + actualOutput)
-
         passed = None
 
-        passed = expectedOutput==actualOutput
+        passed = expectedOutput.replace(" ", "").replace("\n", "")==actualOutput.replace(" ", "").replace("\n", "")
 
         if passed:
             successes = successes + 1
             printGreen("PASSED")
         else:
-            failures = failures = 1
+            failures = failures + 1
             printRed("FAILED")
             printRed("Expected: ")
             print(expectedOutput)

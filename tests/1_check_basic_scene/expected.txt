@@ -1,6 +1,12 @@
-<scene name="Test">
-    <header>
-        <string>This is a simple title</string>
-        <string>This is a simple description</string>
-    </header>
-</scene>
+<section name="">
+    <scene name="main">
+        <header>
+            <string>
+                "This is a simple title"
+            </string>
+            <string>
+                "This is a simple description"
+            </string>
+        </header>
+    </scene>
+</section>
