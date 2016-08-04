@@ -1,4 +1,0 @@
-{
-    "command" : "echo hi > actual.txt",
-    "expect_success" : false
-}

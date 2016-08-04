@@ -1,4 +1,3 @@
 {
-    "command" : "echo hi > actual.txt",
-    "expect_success" : true
+    "command" : "echo hi > actual.txt"
 }

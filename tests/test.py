@@ -9,6 +9,15 @@ import subprocess
 import json
 from docopt import docopt
 
+def printGreen(msg):
+    print("\033[92m" + str(msg) + "\033[0m")
+
+def printRed(msg):
+    print("\033[91m" + str(msg) + "\033[0m")
+
+def printYellow(msg):
+    print("\033[93m" + str(msg) + "\033[0m")
+
 if __name__=="__main__":
     #Parse arguments
     arguments = docopt(__doc__, version = "Fabula Tests")
@@ -28,7 +37,7 @@ if __name__=="__main__":
     for folder in tests:
 
         #Prepare
-        print("\033[95mRunning test " + folder)
+        print("Running test " + folder)
         if verbose:
         	print(os.getcwd())
         os.chdir(folder)
@@ -38,13 +47,20 @@ if __name__=="__main__":
 
         #Run command
         if subprocess.call(json_data[u"command"], shell=True) != 0:
-            print("\033[91mERROR RUNNING TEST COMMAND `" + json_data[u"command"] + "`")
+            printRed("ERROR RUNNING TEST COMMAND `" + json_data[u"command"] + "`")
             continue
 
         #Get expected and actual
         expectedOutput = open("expected.txt").read().strip()
-        actualOutput = open("actual.txt").read().strip()
-        os.remove("actual.txt")
+        actualOutput = ""
+        try:
+            actualOutput = open("actual.txt").read().strip()
+        except IOError:
+            printYellow("No output generated")
+            actualOutput = "<file not found>"
+        else:
+            os.remove("actual.txt")
+
         os.chdir("..")
 
         #Print result
@@ -52,37 +68,35 @@ if __name__=="__main__":
             print("Expected: " + expectedOutput)
             print("Actual:   " + actualOutput)
 
-        expect_success = json_data[u"expect_success"]
-        passed = (expectedOutput==actualOutput)
-        passed = passed == expect_success
+        passed = None
 
-        if verbose:
-            if expect_success:
-                print("Testing Actual = Expected")
-            else:
-                print("Testing Actual != Expected")
+        passed = expectedOutput==actualOutput
 
         if passed:
             successes = successes + 1
-            print("\033[92mPASSED")
+            printGreen("PASSED")
         else:
             failures = failures = 1
-            print("\033[91mFAILED")
+            printRed("FAILED")
+            printRed("Expected: ")
+            print(expectedOutput)
+            printRed("Actual:   ")
+            print(actualOutput)
 
     #Print summary
     print("Tests completed.")
     if(failures!=0):
         if failures==1:
-            print("\033[91m1 failure")
+            printRed("1 failure")
         else:
-            print("\033[91m" + str(failures) + " failures")
+            printRed(str(failures) + " failures")
     if(failures==0 and successes!=0):
         if successes==1:
-            print("\033[92m1 success")
+            printGreen("1 success")
         else:
-            print("\033[92m" + str(successes) + " successes")
+            printGreen(str(successes) + " successes")
     elif(successes!=0):
         if successes==1:
-            print("\033[93m1 success")
+            printGreen("1 success")
         else:
-            print("\033[93m" + str(successes) + " successes")
+            printGreen(str(successes) + " successes")
