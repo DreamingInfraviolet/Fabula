@@ -72,21 +72,24 @@ SECTION             :                                    { }
                                                            $$.add(std::make_shared<Scene>($1)); }
 
 ///@return Section A fully populated scene object.
-SECTION_DECLARATION : tidentifier tbracket_square_open
-                        SECTION tbracket_square_close    { $$ = $3;
+SECTION_DECLARATION : tbracket_square_open SECTION tbracket_square_close
+                                                          { fyyerror("Section does not have a name."); }
+                    | tidentifier tbracket_square_open SECTION tbracket_square_close
+                                                          { $$ = $3;
                                                            $$.name = $1; }
 
 ///@return Scene A fully populated scene object.
-SCENE_DECLARATION   : SCENE_DECLARATION_PREFIX tbracket_curly_open SCENE_CONTENT tbracket_curly_close {
-                                                           $$ = $3;
+SCENE_DECLARATION   : SCENE_DECLARATION_PREFIX tbracket_curly_open SCENE_CONTENT tbracket_curly_close
+                                                         { $$ = $3;
                                                            $$.name = $1.name; }
-                    | SCENE_DECLARATION_PREFIX tbracket_curly_open SCENE_CONTENT { fyyerror("Expected '}' after scene declaration."); }
+                    | SCENE_DECLARATION_PREFIX tbracket_curly_open SCENE_CONTENT
+                                                         { fyyerror("Expected '}' after scene declaration."); }
 
 SCENE_DECLARATION_PREFIX : tscene                        { fyyerror("Missing scene name."); }
                          | tscene tidentifier            { $$.name = $2; }
 
 ///@return Scene A partially populated scene object (only header and content).
-SCENE_CONTENT               : HEADER SCENE_POSTHEADER            { $$ = $2;
+SCENE_CONTENT               : HEADER SCENE_POSTHEADER    { $$ = $2;
                                                            $$.header = std::make_shared<Header>($1); }
 
 ///@return Scene A partially populated scene object (only content).
@@ -103,8 +106,9 @@ CHOICE_LIST         :                                    { }
                                                            $$.push_back(std::make_shared<Choice>($2)); };
 
 ///@return Choice The populated choice.
-CHOICE              : tchoice tstring tbracket_curly_open tstring GOTO tbracket_curly_close { $$.header = std::make_shared<Header>($2, $4);
-                                                                                     $$.destination = std::make_shared<Destination>($5); }
+CHOICE              : tchoice tstring tbracket_curly_open tstring GOTO tbracket_curly_close
+                                                         { $$.header = std::make_shared<Header>($2, $4);
+                                                           $$.destination = std::make_shared<Destination>($5); }
 
 ///@return Destination The location object.
 GOTO                : tgoto LOCATION                     { $$ = $2; };
