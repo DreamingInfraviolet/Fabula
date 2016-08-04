@@ -22,7 +22,7 @@ populate_sources_and_headers(COMMON_SOURCES         COMMON_HEADERS         ${COM
 populate_sources_and_headers(PARSE_NODE_SOURCES     PARSE_NODE_HEADERS     ${PARSE_NODE_DIR})
 populate_sources_and_headers(PARSER_SOURCES         PARSER_HEADERS         ${PARSER_DIR})
 populate_sources_and_headers(PARSER_CMD_SOURCES     PARSER_CMD_HEADERS     ${PARSER_CMD_DIR})
-populate_sources_and_headers(INTERFACE_HTML_SOURCES INTERFACE_HTML_SOURCES ${INTERFACE_HTML_DIR})
+populate_sources_and_headers(INTERFACE_HTML_SOURCES INTERFACE_HTML_HEADERS ${INTERFACE_HTML_DIR})
 
 find_package(Boost COMPONENTS program_options regex REQUIRED)
 

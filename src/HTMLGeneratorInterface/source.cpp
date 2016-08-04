@@ -44,17 +44,17 @@ namespace fabula
             assert(root);
 
             //Go through each subsection
-            for (auto s = root->sectionsBegin(); s != root->sectionsEnd(); ++s)
+            for (auto s = root->subsections.begin(); s != root->subsections.end(); ++s)
             {
                 assert(s->second);
-                _generateNames(s->second);
+                _generateNames(s->second.get());
             }
 
             //Register names of each scene
-            for (auto s = root->scenesBegin(); s != root->scenesEnd(); ++s)
+            for (auto s = root->scenes.begin(); s != root->scenes.end(); ++s)
             {
                 assert(s->second);
-                addName(root, s->second);
+                addName(root, s->second.get());
             }
 
         }
@@ -82,11 +82,11 @@ namespace fabula
             assert(scene);
 
             Section* next = section;
-            std::string prefix = section->name();
-            std::string postfix = scene->name();
+            std::string prefix = section->name;
+            std::string postfix = scene->name;
 
             while ((next = dynamic_cast<Section*>(next->parent())) != nullptr)
-                prefix = next->name() + "." + prefix;
+                prefix = next->name + "." + prefix;
 
             nameMapping[scene] = mPrefix + prefix + postfix;
         }
@@ -151,22 +151,21 @@ namespace fabula
 
             //Write choices
             writer.push("ul");
-            if (scene->choices())
-                for (Choice* c : *scene->choices())
-                {
-                    Scene* dest = c->destination().getScene();
+            for (auto& c : scene->choices)
+            {
+                Scene* dest = c->destination->getScene();
 
-                    writer.push("li");
-                    writer.push("a", { { "href", nameManager.getName(dest) } });
-                    writer.push("h3");
-                    writer.writeBytes(c->header().title().string());
-                    writer.pop();//h3
-                    writer.push("h2");
-                    writer.writeBytes(c->header().description().string());
-                    writer.pop();//h2
-                    writer.pop();//a
-                    writer.pop();//li
-                }
+                writer.push("li");
+                writer.push("a", { { "href", nameManager.getName(dest) } });
+                writer.push("h3");
+                writer.writeBytes(c->header->title.string);
+                writer.pop();//h3
+                writer.push("h2");
+                writer.writeBytes(c->header->description.string);
+                writer.pop();//h2
+                writer.pop();//a
+                writer.pop();//li
+            }
             writer.pop();//ul
 
             str = std::regex_replace(
@@ -174,9 +173,9 @@ namespace fabula
                     std::regex_replace(
                         std::regex_replace(
                             str, choicesRegex, choicesStr.str()),
-                        descRegex, scene->header().description().string()),
-                    headRegex, scene->header().title().string()),
-                nameRegex, scene->name());
+                        descRegex, scene->header->description.string),
+                    headRegex, scene->header->title.string),
+                nameRegex, scene->name);
 
             file << str;
         }
@@ -184,12 +183,12 @@ namespace fabula
         void handleSection(Section* section, const Configuration& config)
         {
             //Write each scene
-            for (auto scene = section->scenesBegin(); scene != section->scenesEnd(); ++scene)
-                handleScene(scene->second, section, config);
+            for (auto scene = section->scenes.begin(); scene != section->scenes.end(); ++scene)
+                handleScene(scene->second.get(), section, config);
 
             //Handle each subsections
-            for (auto s = section->sectionsBegin(); s != section->sectionsEnd(); ++s)
-                handleSection(s->second, config);
+            for (auto s = section->subsections.begin(); s != section->subsections.end(); ++s)
+                handleSection(s->second.get(), config);
 
         }
 
