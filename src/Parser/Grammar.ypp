@@ -48,7 +48,8 @@
 %type <section> SECTION
 %type <section> SECTION_DECLARATION
 %type <scene> SCENE_DECLARATION
-%type <scene> SCENE
+%type <scene> SCENE_DECLARATION_PREFIX
+%type <scene> SCENE_CONTENT
 %type <scene> SCENE_POSTHEADER
 %type <header> HEADER
 %type <choicelist> CHOICE_LIST
@@ -76,12 +77,16 @@ SECTION_DECLARATION : tidentifier tbracket_square_open
                                                            $$.name = $1; }
 
 ///@return Scene A fully populated scene object.
-SCENE_DECLARATION   :tscene tidentifier tbracket_curly_open SCENE tbracket_curly_close {
-                                                           $$ = $4;
-                                                           $$.name = $2; }
+SCENE_DECLARATION   : SCENE_DECLARATION_PREFIX tbracket_curly_open SCENE_CONTENT tbracket_curly_close {
+                                                           $$ = $3;
+                                                           $$.name = $1.name; }
+                    | SCENE_DECLARATION_PREFIX tbracket_curly_open SCENE_CONTENT { fyyerror("Expected '}' after scene declaration."); }
+
+SCENE_DECLARATION_PREFIX : tscene                        { fyyerror("Missing scene name."); }
+                         | tscene tidentifier            { $$.name = $2; }
 
 ///@return Scene A partially populated scene object (only header and content).
-SCENE               : HEADER SCENE_POSTHEADER            { $$ = $2;
+SCENE_CONTENT               : HEADER SCENE_POSTHEADER            { $$ = $2;
                                                            $$.header = std::make_shared<Header>($1); }
 
 ///@return Scene A partially populated scene object (only content).

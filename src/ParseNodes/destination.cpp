@@ -86,7 +86,7 @@ namespace fabula
 
                 if (!scene)
                     CONDITIONAL_THROW("Invalid location: Scene " + sceneName +
-                        "does not exist in " + currentNode->name);
+                        " does not exist in " + currentNode->name);
 
                 return scene;
 
