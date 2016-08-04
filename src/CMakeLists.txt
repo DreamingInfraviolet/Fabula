@@ -1,10 +1,11 @@
 
+set(SRC_DIR                                        ${CMAKE_CURRENT_SOURCE_DIR})
 set(COMMON_DIR                                     ${CMAKE_CURRENT_SOURCE_DIR}/common/)
 set(PARSE_NODE_DIR                                 ${CMAKE_CURRENT_SOURCE_DIR}/ParseNodes/)
 set(PARSER_DIR                                     ${CMAKE_CURRENT_SOURCE_DIR}/Parser/)
 set(PARSER_CMD_DIR                                 ${CMAKE_CURRENT_SOURCE_DIR}/ParserCommandLine/)
 set(INTERFACE_HTML_DIR                             ${CMAKE_CURRENT_SOURCE_DIR}/HTMLGeneratorInterface/)
-                   
+
 macro(populate_sources name dir)
     file(GLOB ${name} ${dir}/*.cpp ${dir}/*.cc ${dir}/*.c)
 endmacro()
