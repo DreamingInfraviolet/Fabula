@@ -10,6 +10,8 @@ message("Flex Output: ${FLEX_Lexer_OUTPUTS}")
 message("Bison Output: ${BISON_Parser_OUTPUTS} ${BISON_Parser_OUTPUT_HEADER}")
 
 add_library(FabulaParser
+                Grammar.flex
+                Grammar.ypp
                 ${PARSER_SOURCES}
                 ${PARSER_HEADERS}
                 ${COMMON_SOURCES}
