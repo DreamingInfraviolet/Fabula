@@ -1,6 +1,6 @@
 #include <iostream>
 #include "fparser.h"
-#include "html_writer.h"
+#include "xml_writer.h"
 #include <fstream>
 #include <map>
 #include <cassert>
