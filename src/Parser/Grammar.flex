@@ -12,7 +12,7 @@
  #include "generated_parser.hpp"
  #include "fyystype.h"
 
- int flexLineNo=1;
+ int flexLineNo=0;
 %}
 
 IDENTIFIER [a-zA-Z_]+ ([0-9] | [a-zA-Z_])*
