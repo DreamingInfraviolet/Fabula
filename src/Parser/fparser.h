@@ -26,8 +26,11 @@ namespace fabula
 
             std::shared_ptr<fabula::parsing::node::Section> mParseTree; //Represents the current internal tree
             std::string mRootPath;
+            std::istream* mInputStream = nullptr;
 
-            Parser(std::istream& inputStream, const std::string& rootPath);
+            Parser(std::istream* inputStream, const std::string& rootPath);
+
+            void initLexerState();
 
             ~Parser();
 
@@ -45,7 +48,7 @@ namespace fabula
 			static Parser* instance();
 
             /** Changes the input stream and directory. */
-            void setInputStream(std::istream& inputStream, const std::string& rootPath);
+            void setInputStream(std::istream* inputStream, const std::string& rootPath);
 
             /** Parses with the current stream. Note that only one parsing session may be run
               * at a time! Checks semantics as well. May throw a SyntacticException, SemanticException,

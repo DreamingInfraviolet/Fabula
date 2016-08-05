@@ -10,8 +10,11 @@
 #include "visitor_semantic_checker.h"
 #include "visitor_writer.h"
 #include "parse_exception.h"
+#include "lexer_include_graph.h"
 
 extern int fyyparse();
+extern fabula::parsing::LexerIncludeGraph gLexerIncludeGraph;
+
 static yyFlexLexer lexer;
 
 int fyylex()
@@ -25,9 +28,19 @@ namespace fabula
     {
         Parser* Parser::mInstance = nullptr;
 
-        Parser::Parser(std::istream& inputStream, const std::string& rootPath)
+        Parser::Parser(std::istream* inputStream, const std::string& rootPath)
         {
             setInputStream(inputStream, rootPath);
+        }
+
+        void Parser::initLexerState()
+        {
+            gLexerIncludeGraph.clear();
+            LexerState state;
+            state.absoluteFilePath = mRootPath;
+            state.fileName = mRootPath; //@TODO: change this to something more readable
+            state.inputStream = mInputStream;
+            gLexerIncludeGraph.push(std::move(state));
         }
 
         Parser::~Parser()
@@ -47,7 +60,7 @@ namespace fabula
                 return mInstance;
             }
             else
-                return mInstance = new Parser(inputStream, rootPath);
+                return mInstance = new Parser(&inputStream, rootPath);
         }
 
         void Parser::destroy(Parser* parser)
@@ -62,10 +75,11 @@ namespace fabula
             return mInstance;
         }
 
-        void Parser::setInputStream(std::istream& inputStream, const std::string& rootPath)
+        void Parser::setInputStream(std::istream* inputStream, const std::string& rootPath)
         {
+            mInputStream = inputStream;
             mRootPath = rootPath;
-            lexer.yyrestart(&inputStream);
+            lexer.yyrestart(inputStream);
         }
 
         void Parser::parse()
@@ -78,6 +92,7 @@ namespace fabula
             else
                 wasAlreadyParsing = true;
 
+            initLexerState();
             fyyparse();
             if (mParseTree)
             {

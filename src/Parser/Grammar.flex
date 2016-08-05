@@ -14,33 +14,31 @@
  using namespace fabula::parsing::node;
  #include "generated_parser.hpp"
  #include "fyystype.h"
+ #include "lexer_include_graph.h"
 
- std::vector<int> fabulaLineStack(1, 0);
- std::vector<std::unique_ptr<std::istream>> fileStack;
+ fabula::parsing::LexerIncludeGraph gLexerIncludeGraph;
 
 #define NEWLINE_CALLBACK\
-    ++fabulaLineStack.back();
+    ++gLexerIncludeGraph.top().lineNumber;
 
 void flexErrorCallback(const std::string& msg)
 {
-    std::cout << fabulaLineStack.back() << ": " << (msg) << std::endl;
+    std::cout << gLexerIncludeGraph.top().lineNumber << ":" << gLexerIncludeGraph.top().fileName << ": " << (msg) << std::endl;
     abort();
 }
 
 #define PUSH_FILE(filestr, size){\
     BEGIN(INITIAL);\
-    fileStack.push_back(std::make_unique<std::ifstream>(filestr));\
-    if(!fileStack.back())\
+    /**TODO: Make this nicer */\
+    gLexerIncludeGraph.push(fabula::parsing::LexerState(filestr, filestr, 0, new std::ifstream(filestr)));\
+    if(!gLexerIncludeGraph.top().inputStream || !(*gLexerIncludeGraph.top().inputStream))\
         flexErrorCallback(std::string("Could not open ") + filestr);\
-    yypush_buffer_state(yy_create_buffer(fileStack.back().get(), size));\
-    fabulaLineStack.push_back(0);\
+    yypush_buffer_state(yy_create_buffer(gLexerIncludeGraph.top().inputStream, size));\
 }
 
 #define POP_FILE(){\
-    yypop_buffer_state(); /* Pop buffer */ \
-    fabulaLineStack.pop_back(); /* Pop line */ \
-    if(fileStack.size()) /* If this is not the root file */ \
-        fileStack.pop_back(); /* Pop file */ \
+    gLexerIncludeGraph.pop();\
+    if(gLexerIncludeGraph.size()) /* If this is not the root file */ \
         BEGIN(endincl); /* Expect >> */ \
     }
 %}
@@ -91,6 +89,6 @@ WHITESPACE [ \t\n\r]
 
 [ \t]          /* Ignore */
 "."     { fyylval.stdstring = ".";  return tfullstop; }
-.       { flexErrorCallback(std::string("Unrecognised symbol at ") + std::to_string(fabulaLineStack.back())
+.       { flexErrorCallback(std::string("Unrecognised symbol at ") + gLexerIncludeGraph.top().fileName + ":" + std::to_string(gLexerIncludeGraph.top().lineNumber)
                             + ": \"" + yytext + "\""); }
 %%

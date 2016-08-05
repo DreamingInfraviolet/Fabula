@@ -8,6 +8,7 @@
     #include "parse_nodes.h"
     #include "fparser.h"
     #include "fyystype.h"
+    #include "lexer_include_graph.h"
 
     using namespace fabula::parsing::node;
 
@@ -19,7 +20,7 @@
 
     #define YYDEBUG 1
 
-    extern std::vector<int> fabulaLineStack;
+    extern fabula::parsing::LexerIncludeGraph gLexerIncludeGraph;
 
     //Bison has a limitation where it does not allow non-pod types to be used,
     //as it relies on a union and only uses a single return type.
@@ -125,6 +126,6 @@ LOCATION_BODY        : LOCATION_BODY tdiv tidentifier    { $$.appendLocation($3)
 %%
 void fyyerror (char const *s)
 {
-  fprintf (stderr, "Parsing error at %d: %s\n", fabulaLineStack.back(), s);
+  fprintf (stderr, "Parsing error at %d: %s\n", gLexerIncludeGraph.top().lineNumber, s);
   abort();
 }
