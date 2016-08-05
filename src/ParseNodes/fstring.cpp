@@ -1,15 +1,7 @@
 #include "fstring.h"
 #include "parse_tree_visitor.h"
 #include "parse_exception.h"
-#include <boost/regex.hpp>
 #include <fstream>
-
-namespace
-{
-//    std::regex rxCompileTimeMixin(""); // Not implemented
-//    std::regex rxRunTimeMixin(""); // Not implemented
-    boost::regex rxCompileTimeFileMixin("\\$\\[[a-zA-Z\\.\\/\\\\]\\]");
-}
 
 namespace fabula
 {
@@ -28,26 +20,26 @@ namespace fabula
                 return NodeType::String;
             }
 
-            std::string modifyStr (const boost::smatch& match)
-            {
-                std::string str = match.str();
-                auto begin = str.find("[") + 1;
-                auto end = str.rfind("]");
-                assert(begin != std::string::npos && end != std::string::npos);
+//            std::string modifyStr (const boost::smatch& match)
+//            {
+//                std::string str = match.str();
+//                auto begin = str.find("[") + 1;
+//                auto end = str.rfind("]");
+//                assert(begin != std::string::npos && end != std::string::npos);
 
-                std::string filePath = str.substr(begin, end-begin);
+//                std::string filePath = str.substr(begin, end-begin);
 
-                std::ifstream file(filePath);
+//                std::ifstream file(filePath);
 
-                if(!file)
-                    throw ParseException(std::string("Unable to open file ") + filePath);
+//                if(!file)
+//                    throw ParseException(std::string("Unable to open file ") + filePath);
 
-                std::string line;
-                std::string out;
-                while(getline(file, line))
-                    out += line + "\n";
-                return out;
-            }
+//                std::string line;
+//                std::string out;
+//                while(getline(file, line))
+//                    out += line + "\n";
+//                return out;
+//            }
 
             void String::prepareString()
             {

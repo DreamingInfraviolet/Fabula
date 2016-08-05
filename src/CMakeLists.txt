@@ -25,13 +25,8 @@ populate_sources_and_headers(PARSER_SOURCES         PARSER_HEADERS         ${PAR
 populate_sources_and_headers(PARSER_CMD_SOURCES     PARSER_CMD_HEADERS     ${PARSER_CMD_DIR})
 populate_sources_and_headers(INTERFACE_HTML_SOURCES INTERFACE_HTML_HEADERS ${INTERFACE_HTML_DIR})
 
-find_package(Boost COMPONENTS program_options regex REQUIRED)
-
 set(PSC_TEST_SOURCES parametrised_string_constructor_test.cpp)
 set(PSC_TEST_HEADERS parametrised_string_constructor.h)
-
-include_directories(${Boost_INCLUDE_DIRS})
-link_directories(${Boost_LIBRARY_DIRS})
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/common)
 add_subdirectory(Parser)

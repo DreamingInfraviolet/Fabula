@@ -19,5 +19,4 @@ add_library(FabulaParser
                 ${FLEX_Lexer_OUTPUTS}
                 )
 
-target_link_libraries(FabulaParser ${Boost_LIBRARIES} ${FLEX_LIBRARIES} ${BISON_LIBRARIES})
 include_directories(. ${PARSE_NODE_DIR})

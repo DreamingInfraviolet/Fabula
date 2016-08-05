@@ -14,9 +14,9 @@ const char* usage =
 R"(Usage:
     fabula [options]
 Options:
-        -i=<input_file> | --input-file=<input_file>      The input file to read from. If not specified, will read from console [default: ]
-        -o=<output_file> | --output-file=<output_file>   The output file to write to write to. If not specified, will print to console [default: ]
-        -f=<output_format> | --format=<output_format>    The output format to use [default: xml]
+        -i=<input_file> --input-file=<input_file>      The input file to read from. If not specified, will read from console [default: ]
+        -o=<output_file> --output-file=<output_file>   The output file to write to. If not specified, will print to console [default: ]
+        -f=<output_format> --format=<output_format>    The output format to use [default: xml]
 
 Welcome to the Glorious Fabula Compiler! ^_^
 This is a very simple tool that can read fabula code and generate an intermediate representation of the code.

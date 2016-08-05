@@ -1,20 +1,18 @@
 #include <iostream>
-#include "fparser.h"
-#include "xml_writer.h"
 #include <fstream>
 #include <map>
 #include <cassert>
 #include <algorithm>
-#include "section.h"
-#include "scene.h"
 #include <regex>
+#include "section.h"
+#include "xml_writer.h"
+#include "scene.h"
+#include "fparser.h"
 #include "header.h"
 #include "choice.h"
-
+#include "docopt.h"
 #include "util.h"
 #include "destination.h"
-#include "boost/program_options.hpp"
-
 
 using namespace std;
 using namespace fabula;
@@ -213,64 +211,55 @@ namespace fabula
     };
 }
 
-
-
 extern int fyydebug;
 int main(int argc, const char** argv)
 {
-    boost::program_options::options_description optionsDesc ("Program Options");
-    optionsDesc.add_options()
-            ("source,s", boost::program_options::value<std::string>()->required(), "Specifies the source .fab file to read")
-            ("template,t", boost::program_options::value<std::string>()->required(), "Specifies the template html file to use")
-            ("help,h", "Provides additional help information")
-            ("verbose,v", "Provides additional internal messages")
-            ("prefix,p", boost::program_options::value<std::string>(), "Specifies a prefix to be appended to each output filename")
-            ("folder,f", boost::program_options::value<std::string>(), "The target destination where the files should be saved");
-    
-    //    const char* programName = argv[0];
-    //    argc-=(argc>0); argv+=(argc>0);
-    namespace po = boost::program_options;
+    const char* usage =
+R"(Usage:
+    program [options]
+Options:
+    -i=<input_file> --input-file=<input_file>      The input file to read from. If not specified, will read from console
+    -t=<template_file> --template-file=<template_file>  The template html file to use.
+    -o=<output_dir> --output-folder=<output_dir>   The output directory to write to. If not specified, will print to console
+    -v --verbose  Provides additional debug messages [default: false]
+    -p --prefix  Specifies a prefix to be appended to each output filename [default: ]
+)";
 
     Configuration config;
 
     try
     {
-        po::positional_options_description p;
-        p.add("source", 1);
+        auto args = docopt::docopt(usage, {argv + 1, argv + argc}, true, {}, true);
 
-        po::variables_map vm;
-        po::store(po::command_line_parser(argc, argv).options(optionsDesc).positional(p).run(), vm);
-        po::notify(vm);
-
-        if(vm.count("help"))
-        {
-            std::cout << optionsDesc << "\n";
-            return 0;
-        }
-
-        if(vm.count("verbose"))
+        if(args["--verbose"].asBool())
             config.verbose = true;
 
-        config.templatePath = vm["template"].as<std::string>();
+        if(!args["--template-file"])
+            throw std::runtime_error("No template file provided.");
+        else
+            config.templatePath = args["--template-file"].asString();
 
-        config.source = vm["source"].as<std::string>();
+        if(!args["--input-file"])
+            throw std::runtime_error("No input Fabula file provided.");
+        else
+            config.source = args["--input-file"].asString();
 
         std::string prefix;
-        if(vm.count("prefix"))
-            config.prefix = vm["prefix"].as<std::string>();
+        if(args["--prefix"])
+            config.prefix = args["--prefix"].asString();
 
-        if(vm.count("folder"))
+        if(args["--output-folder"])
         {
-            config.folder = vm["folder"].as<std::string>();
+            config.folder = args["--output-folder"].asString();
             if(!config.folder.empty())
                 if(config.folder.back() != '/' && config.folder.back() != '\\')
                     config.folder.push_back('/');
         }
     }
-    catch(const boost::program_options::error& e)
+    catch(const std::runtime_error& e)
     {
         std::cout << e.what() << "\n";
-        std::cout << optionsDesc << "\n";
+        std::cout << usage << "\n";
         return 1;
     }
 
