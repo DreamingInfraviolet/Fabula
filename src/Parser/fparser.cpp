@@ -10,7 +10,6 @@
 #include "visitor_semantic_checker.h"
 #include "visitor_writer.h"
 #include "parse_exception.h"
-
 extern int fyyparse();
 static yyFlexLexer lexer;
 

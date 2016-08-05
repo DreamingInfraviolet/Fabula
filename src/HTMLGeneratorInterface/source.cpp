@@ -15,7 +15,6 @@
 #include "destination.h"
 #include "boost/program_options.hpp"
 
-
 using namespace std;
 using namespace fabula;
 using namespace fabula::parsing;

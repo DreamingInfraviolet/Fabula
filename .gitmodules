@@ -2,3 +2,7 @@
 	path = src/third_party/docopt.cpp
 	url = https://github.com/docopt/docopt.cpp.git
 	branch = master
+[submodule "src/third_party/poco"]
+	path = src/third_party/poco
+	url = https://github.com/pocoproject/poco.git
+	branch = master
