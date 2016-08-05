@@ -1,0 +1,3 @@
+{
+    "command" : "../../build/src/ParserCommandLine/FabulaCommandLine -i test.fab -o actual.txt"
+}
