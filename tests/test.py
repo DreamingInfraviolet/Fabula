@@ -48,6 +48,7 @@ if __name__=="__main__":
         #Run command
         if subprocess.call(json_data[u"command"], shell=True) != 0:
             printRed("ERROR RUNNING TEST COMMAND `" + json_data[u"command"] + "`")
+            os.chdir("..")
             continue
 
         #Get expected and actual
