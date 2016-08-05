@@ -1,0 +1,14 @@
+scene main
+{
+    "title"
+    "description"
+
+    choice "choice 1"
+    {
+        "choice 1 desc"
+        goto SEC/B
+    }
+}
+
+<</home/anima/Desktop/personal/Fabula/tests/4_check_include/B.fab>>
+
