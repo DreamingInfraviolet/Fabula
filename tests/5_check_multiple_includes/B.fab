@@ -1,0 +1,14 @@
+SEC
+[
+    scene B
+    {
+        <</home/anima/Desktop/personal/Fabula/tests/5_check_multiple_includes/C.fab>>
+        "description"
+
+        choice "choice 2"
+        {
+            "choice 2 desc"
+            goto main
+        }
+    }
+]
