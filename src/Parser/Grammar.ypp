@@ -4,6 +4,7 @@
     #include <string>
     #include <vector>
     #include <memory>
+    #include <stack>
     #include "parse_nodes.h"
     #include "fparser.h"
     #include "fyystype.h"
@@ -18,7 +19,7 @@
 
     #define YYDEBUG 1
 
-    extern int flexLineNo;
+    extern std::vector<int> fabulaLineStack;
 
     //Bison has a limitation where it does not allow non-pod types to be used,
     //as it relies on a union and only uses a single return type.
@@ -124,6 +125,6 @@ LOCATION_BODY        : LOCATION_BODY tdiv tidentifier    { $$.appendLocation($3)
 %%
 void fyyerror (char const *s)
 {
-  fprintf (stderr, "Parsing error at %d: %s\n", flexLineNo, s);
+  fprintf (stderr, "Parsing error at %d: %s\n", fabulaLineStack.back(), s);
   abort();
 }
