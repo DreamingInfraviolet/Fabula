@@ -39,6 +39,7 @@ namespace fabula
 
                     while (next != nullptr)
                     {
+                        currentNode = next;
                         next = next->parent();
                     }
 

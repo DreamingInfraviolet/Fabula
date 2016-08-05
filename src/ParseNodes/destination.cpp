@@ -64,7 +64,6 @@ namespace fabula
                 Section* parentSection = dynamic_cast<Section*>(parentScene->parent());
                 assert(parentSection);
 
-
                 //We need to traverse the location chain.
                 const auto root = dynamic_cast<Section*>(parentSection->getRoot());
                 if(!root)
