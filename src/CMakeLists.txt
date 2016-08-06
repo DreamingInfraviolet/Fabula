@@ -1,4 +1,4 @@
-
+ 
 set(SRC_DIR                                        ${CMAKE_CURRENT_SOURCE_DIR})
 set(COMMON_DIR                                     ${CMAKE_CURRENT_SOURCE_DIR}/common/)
 set(PARSE_NODE_DIR                                 ${CMAKE_CURRENT_SOURCE_DIR}/ParseNodes/)

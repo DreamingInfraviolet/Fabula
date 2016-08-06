@@ -11,12 +11,15 @@
  #include "choice.h"
  #include "header.h"
  #include "destination.h"
+ #include "fyystype.h"
+ #define FYYSTYPE FYYSType
+ extern FYYSTYPE yyltype;
  using namespace fabula::parsing::node;
  #include "generated_parser.hpp"
- #include "fyystype.h"
  #include "lexer_include_graph.h"
 
  fabula::parsing::LexerIncludeGraph gLexerIncludeGraph;
+
 
 #define NEWLINE_CALLBACK\
     ++gLexerIncludeGraph.top().lineNumber;

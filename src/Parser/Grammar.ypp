@@ -20,6 +20,8 @@
 
     #define YYDEBUG 1
 
+	#define FYYSTYPE FYYSType
+
     extern fabula::parsing::LexerIncludeGraph gLexerIncludeGraph;
 
     //Bison has a limitation where it does not allow non-pod types to be used,
@@ -29,8 +31,7 @@
 %}
 
 %locations
-%define api.prefix {fyy}
-%define api.value.type {class FYYSType}
+%define api.prefix fyy
 
 //Terminal symbols
 %token <stdstring> tdiv
