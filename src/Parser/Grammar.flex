@@ -34,7 +34,6 @@ void flexErrorCallback(const std::string& msg)
     BEGIN(INITIAL);\
     /**TODO: Make this nicer */\
     gLexerIncludeGraph.push(fabula::parsing::LexerState(filestr, filestr, 0, new std::ifstream(filestr)));\
-std::cout<<"pushed"<<std::endl;\
     if(!gLexerIncludeGraph.top().inputStream || !(*gLexerIncludeGraph.top().inputStream))\
         flexErrorCallback(std::string("Could not open ") + filestr);\
     yypush_buffer_state(yy_create_buffer(gLexerIncludeGraph.top().inputStream, size));\

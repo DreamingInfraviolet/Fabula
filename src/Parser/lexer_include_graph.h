@@ -55,7 +55,7 @@ namespace fabula
                 std::set<std::string> allFiles;
                 for(const auto& state : mStack)
                 {
-                    if(allFiles.insert(state.absoluteFilePath).second)
+                    if(!allFiles.insert(state.absoluteFilePath).second)
                         return true;
                 }
 
