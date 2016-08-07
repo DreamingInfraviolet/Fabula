@@ -8,7 +8,7 @@ namespace fabula
 {
     namespace parsing
     {
-        class LexerIncludeGraphException : std::runtime_error
+        class LexerIncludeGraphException : public std::runtime_error
         {
         public:
             LexerIncludeGraphException(const std::string& msg) : std::runtime_error(msg) {}
