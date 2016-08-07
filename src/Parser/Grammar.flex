@@ -37,10 +37,11 @@ void flexErrorCallback(const std::string& msg)
     if(!gLexerIncludeGraph.top().inputStream || !(*gLexerIncludeGraph.top().inputStream))\
         flexErrorCallback(std::string("Could not open ") + filestr);\
     yypush_buffer_state(yy_create_buffer(gLexerIncludeGraph.top().inputStream, size));\
-}
+}	
 
 #define POP_FILE(){\
     gLexerIncludeGraph.pop();\
+	yypop_buffer_state();\
     if(gLexerIncludeGraph.size()) /* If this is not the root file */ \
         BEGIN(endincl); /* Expect >> */ \
     }
