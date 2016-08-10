@@ -1,0 +1,14 @@
+SEC
+[
+    scene B
+    {
+        "title"
+        "description"
+
+        choice "choice 2"
+        {
+            "choice 2 desc"
+            goto main
+        }
+    }
+]

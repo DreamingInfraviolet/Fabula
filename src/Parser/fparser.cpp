@@ -3,6 +3,7 @@
 #include <istream>
 #include <ostream>
 #include <cassert>
+#include <Poco/Path.h>
 #include "section.h"
 #include "FlexLexer.h"
 #include <atomic>
@@ -10,7 +11,11 @@
 #include "visitor_semantic_checker.h"
 #include "visitor_writer.h"
 #include "parse_exception.h"
+#include "lexer_include_graph.h"
+
 extern int fyyparse();
+extern fabula::parsing::LexerIncludeGraph gLexerIncludeGraph;
+
 static yyFlexLexer lexer;
 
 int fyylex()
@@ -24,9 +29,16 @@ namespace fabula
     {
         Parser* Parser::mInstance = nullptr;
 
-        Parser::Parser(std::istream& inputStream, const std::string& rootPath)
+        Parser::Parser(std::istream* inputStream, const std::string& rootPath)
         {
             setInputStream(inputStream, rootPath);
+        }
+
+        void Parser::initLexerState()
+        {
+            gLexerIncludeGraph.clear();
+			auto state = LexerState(mRootPath, 0, mInputStream);
+            gLexerIncludeGraph.push(std::move(state));
         }
 
         Parser::~Parser()
@@ -46,7 +58,7 @@ namespace fabula
                 return mInstance;
             }
             else
-                return mInstance = new Parser(inputStream, rootPath);
+                return mInstance = new Parser(&inputStream, rootPath);
         }
 
         void Parser::destroy(Parser* parser)
@@ -61,10 +73,11 @@ namespace fabula
             return mInstance;
         }
 
-        void Parser::setInputStream(std::istream& inputStream, const std::string& rootPath)
+        void Parser::setInputStream(std::istream* inputStream, const std::string& rootPath)
         {
-            mRootPath = rootPath;
-            lexer.yyrestart(&inputStream);
+            mInputStream = inputStream;
+            mRootPath = Poco::Path(rootPath).absolute().toString();
+            lexer.yyrestart(inputStream);
         }
 
         void Parser::parse()
@@ -77,6 +90,7 @@ namespace fabula
             else
                 wasAlreadyParsing = true;
 
+            initLexerState();
             fyyparse();
             if (mParseTree)
             {
@@ -110,6 +124,6 @@ namespace fabula
                 VisitorWriter vw(writer);
                 vw.visit(*mParseTree);
             }
-        }
+		   }
     }
 }

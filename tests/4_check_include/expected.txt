@@ -1,0 +1,61 @@
+<section name="">
+    <scene name="main">
+        <header>
+            <string>
+                "title"
+            </string>
+            <string>
+                "description"
+            </string>
+        </header>
+        <choices>
+            <choice>
+                <header>
+                    <string>
+                        "choice 1"
+                    </string>
+                    <string>
+                        "choice 1 desc"
+                    </string>
+                </header>
+                <destination>
+                    <link>
+                        "SEC"
+                    </link>
+                    <link>
+                        "B"
+                    </link>
+                </destination>
+            </choice>
+        </choices>
+    </scene>
+    <section name="SEC">
+        <scene name="B">
+            <header>
+                <string>
+                    "title"
+                </string>
+                <string>
+                    "description"
+                </string>
+            </header>
+            <choices>
+                <choice>
+                    <header>
+                        <string>
+                            "choice 2"
+                        </string>
+                        <string>
+                            "choice 2 desc"
+                        </string>
+                    </header>
+                    <destination>
+                        <link>
+                            "main"
+                        </link>
+                    </destination>
+                </choice>
+            </choices>
+        </scene>
+    </section>
+</section>
