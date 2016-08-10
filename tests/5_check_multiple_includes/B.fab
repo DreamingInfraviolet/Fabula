@@ -2,7 +2,7 @@ SEC
 [
     scene B
     {
-        <</home/anima/Desktop/personal/Fabula/tests/5_check_multiple_includes/C.fab>>
+        <<C.fab>>
         "description"
 
         choice "choice 2"

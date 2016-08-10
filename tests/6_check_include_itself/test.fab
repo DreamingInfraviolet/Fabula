@@ -10,5 +10,4 @@ scene main
     }
 }
 
-<</home/anima/Desktop/personal/Fabula/tests/6_check_include_itself/test.fab>>
-
+<<test.fab>>

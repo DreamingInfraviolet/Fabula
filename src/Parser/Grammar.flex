@@ -33,9 +33,10 @@ void flexErrorCallback(const std::string& msg)
 #define PUSH_FILE(filestr, size){try{\
     BEGIN(INITIAL);\
     /**TODO: Make this nicer */\
-    gLexerIncludeGraph.push(fabula::parsing::LexerState(filestr, filestr, 0, new std::ifstream(filestr)));\
+	std::string actualPath = gLexerIncludeGraph.top().joinPaths(gLexerIncludeGraph.top().absoluteFilePath, filestr);\
+    gLexerIncludeGraph.push(fabula::parsing::LexerState(actualPath, 0, new std::ifstream(actualPath)));\
     if(!gLexerIncludeGraph.top().inputStream || !(*gLexerIncludeGraph.top().inputStream))\
-        flexErrorCallback(std::string("Could not open ") + filestr);\
+        flexErrorCallback(std::string("Could not open ") + actualPath);\
     yypush_buffer_state(yy_create_buffer(gLexerIncludeGraph.top().inputStream, size));\
 	} catch(const std::exception& e) { flexErrorCallback(e.what()); }\
 }	
@@ -80,7 +81,7 @@ WHITESPACE [ \t\n\r]
 "\n"      { NEWLINE_CALLBACK }
 
 "<<" BEGIN(incl);
-<incl>[0-9a-zA-Z_\.\-/\\ \t]+ {std::cerr<<"Found " << yytext << "\n"; PUSH_FILE(yytext, YY_BUF_SIZE) }
+<incl>[0-9a-zA-Z_\.\-/\\ \t:]+ { PUSH_FILE(yytext, YY_BUF_SIZE) }
 <incl>.|\n|\r         { flexErrorCallback("Found newline before terminating >>"); BEGIN(INITIAL); }
 
 <endincl>">>"         { BEGIN(INITIAL); }
