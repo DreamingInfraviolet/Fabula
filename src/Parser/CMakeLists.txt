@@ -19,4 +19,5 @@ add_library(FabulaParser
                 ${FLEX_Lexer_OUTPUTS}
                 )
 
-include_directories(. ${PARSE_NODE_DIR})
+include_directories(. ${PARSE_NODE_DIR} ${SRC_DIR}/third_party/poco/Foundation/include)
+target_link_libraries(FabulaParser PocoFoundation)

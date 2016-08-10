@@ -26,14 +26,15 @@
 
 void flexErrorCallback(const std::string& msg)
 {
-    std::cout << gLexerIncludeGraph.top().lineNumber << ":" << gLexerIncludeGraph.top().fileName << ": " << (msg) << std::endl;
+    std::cout << gLexerIncludeGraph.top().lineNumber << ":" << gLexerIncludeGraph.top().filePath.getFileName() << ": " << (msg) << std::endl;
     abort();
 }
 
 #define PUSH_FILE(filestr, size){try{\
     BEGIN(INITIAL);\
     /**TODO: Make this nicer */\
-	std::string actualPath = gLexerIncludeGraph.top().joinPaths(gLexerIncludeGraph.top().absoluteFilePath, filestr);\
+	std::string actualPath = gLexerIncludeGraph.top().getAbsolutePathFromRelative(filestr);\
+	std::cout<<"Found " << actualPath << "\n";\
     gLexerIncludeGraph.push(fabula::parsing::LexerState(actualPath, 0, new std::ifstream(actualPath)));\
     if(!gLexerIncludeGraph.top().inputStream || !(*gLexerIncludeGraph.top().inputStream))\
         flexErrorCallback(std::string("Could not open ") + actualPath);\
@@ -95,6 +96,6 @@ WHITESPACE [ \t\n\r]
 
 [ \t]          /* Ignore */
 "."     { fyylval.stdstring = ".";  return tfullstop; }
-.       { flexErrorCallback(std::string("Unrecognised symbol at ") + gLexerIncludeGraph.top().fileName + ":" + std::to_string(gLexerIncludeGraph.top().lineNumber)
+.       { flexErrorCallback(std::string("Unrecognised symbol at ") + gLexerIncludeGraph.top().filePath.getFileName() + ":" + std::to_string(gLexerIncludeGraph.top().lineNumber)
                             + ": \"" + yytext + "\""); }
 %%

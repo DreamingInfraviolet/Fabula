@@ -39,7 +39,7 @@ namespace fabula
               * should parse. The directory is not used yet, but is placed here for future
               * compatability to allow recursive scripts.
               * Only one parser may exist at a time, and must be destroyed to free memory. */
-            static Parser* create(std::istream& inputStream, const std::string& rootPath);
+            static Parser* create(std::istream& inputStream, const std::string& rootPath = "");
 
             /** Destroys the current parser, freeing memory. */
             static void destroy(Parser* parser);

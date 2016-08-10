@@ -56,8 +56,10 @@ int main(int argc, char** argv)
 {
     try
     {
+
         auto args = docopt::docopt(usage, {argv + 1, argv + argc}, true, {}, true);
 
+		
         std::string outputFormat = args["--format"].asString();
         if(outputFormat != "xml")
             throw std::runtime_error("Unsupported output format. Currently only xml is supported.");
@@ -68,7 +70,7 @@ int main(int argc, char** argv)
         std::istringstream inputStream(input);
         std::ostringstream outputStream;
 
-        fabula::parsing::Parser* parser = fabula::parsing::Parser::create(inputStream, "");
+        fabula::parsing::Parser* parser = fabula::parsing::Parser::create(inputStream, args["--input-file"].asString());
         parser->parse();
         fabula::parsing::XmlWriter writer(outputStream);
         parser->write(writer);

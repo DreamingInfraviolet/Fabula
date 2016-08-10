@@ -3,6 +3,7 @@
 #include <istream>
 #include <ostream>
 #include <cassert>
+#include <Poco/Path.h>
 #include "section.h"
 #include "FlexLexer.h"
 #include <atomic>
@@ -36,10 +37,7 @@ namespace fabula
         void Parser::initLexerState()
         {
             gLexerIncludeGraph.clear();
-            LexerState state;
-            state.absoluteFilePath = mRootPath;
-            state.fileName = mRootPath; //@TODO: change this to something more readable
-            state.inputStream = mInputStream;
+			auto state = LexerState(mRootPath, 0, mInputStream);
             gLexerIncludeGraph.push(std::move(state));
         }
 
@@ -78,7 +76,7 @@ namespace fabula
         void Parser::setInputStream(std::istream* inputStream, const std::string& rootPath)
         {
             mInputStream = inputStream;
-            mRootPath = rootPath;
+            mRootPath = Poco::Path(rootPath).absolute().toString();
             lexer.yyrestart(inputStream);
         }
 
@@ -126,6 +124,6 @@ namespace fabula
                 VisitorWriter vw(writer);
                 vw.visit(*mParseTree);
             }
-        }
+		   }
     }
 }

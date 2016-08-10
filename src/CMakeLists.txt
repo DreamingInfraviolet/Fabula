@@ -28,9 +28,12 @@ populate_sources_and_headers(INTERFACE_HTML_SOURCES INTERFACE_HTML_HEADERS ${INT
 set(PSC_TEST_SOURCES parametrised_string_constructor_test.cpp)
 set(PSC_TEST_HEADERS parametrised_string_constructor.h)
 
+link_directories(${CMAKE_BINARY_DIR}/lib/Debug)
+link_directories(${CMAKE_BINARY_DIR}/lib/Release)
+
+add_subdirectory(third_party)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/common)
 add_subdirectory(Parser)
 add_subdirectory(ParseNodes)
 add_subdirectory(ParserCommandLine)
 add_subdirectory(HTMLGeneratorInterface)
-add_subdirectory(third_party)

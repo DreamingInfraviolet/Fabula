@@ -22,7 +22,7 @@ namespace fabula
             void push(const LexerState& state)
             {
                 if(hasDuplicate(&state))
-                    throw LexerIncludeGraphException(std::string("File '") + state.absoluteFilePath + "' <<included>> multiple times.");
+                    throw LexerIncludeGraphException(std::string("File '") + state.filePath.absolute().toString() + "' <<included>> multiple times.");
                 mStack.push_back(state);
             }
 
@@ -55,11 +55,11 @@ namespace fabula
                 std::set<std::string> allFiles;
                 for(const auto& state : mStack)
                 {
-                    if(!allFiles.insert(state.absoluteFilePath).second)
+                    if(!allFiles.insert(state.filePath.absolute().toString()).second)
                         return true;
                 }
-
-                if(additionalState && allFiles.find(additionalState->absoluteFilePath) != allFiles.end())
+				
+                if(additionalState && allFiles.find(additionalState->filePath.absolute().toString()) != allFiles.end())
                     return true;
                 return false;
             }
